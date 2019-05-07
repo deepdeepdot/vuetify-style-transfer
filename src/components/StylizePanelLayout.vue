@@ -4,6 +4,7 @@
       <v-layout row wrap>
         <v-flex d-flex xs12 sm6>
           <ImageInput
+            ref="styleImgA"
             imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
             sliderLabel="Style image A size"
             :items="styleOptions"
@@ -12,6 +13,7 @@
 
         <v-flex d-flex xs12 sm6>
           <ImageInput
+            ref="styleImgB"
             imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
             sliderLabel="Style image B size"
             :items="styleOptions"
@@ -23,6 +25,7 @@
             <v-flex xs12 sm6>
               <v-card flat>
                 <ImageInput
+                  ref="contentImg"
                   imgUrl="https://cdn.vuetifyjs.com/images/cards/plane.jpg"
                   sliderLabel="Content image size"
                   :items="contentOptions"
@@ -40,6 +43,7 @@
                   buttonLabel="Combine Styles"
                   sliderLabel="Stylization Ratio"
                   :items="items"
+                  @styleAction="transferStyle"
                 />
               </v-card>
             </v-flex>
@@ -48,7 +52,7 @@
 
         <v-flex d-flex xs12>
           <v-layout row justify-center>
-            <canvas id="canvas-single" width="400px" height="400px"></canvas>
+            <canvas ref="canvas" id="canvas-single" width="400px" height="400px"></canvas>
           </v-layout>
         </v-flex>
 
@@ -67,6 +71,19 @@
 import ImageInput from "./ImageInput";
 import StylizeControl from "./StylizeControl";
 import ModalCamera from "./ModalCamera";
+import StyleTransfer from "../lib/StyleTransfer";
+
+// function StyleTransfer() {
+//   return {
+//     transfer: function() { alert('lets move it'); }
+//   }
+// }
+
+let styleTransfer = new StyleTransfer();
+styleTransfer.loadMobileNetStyleModel().then();
+styleTransfer.loadOriginalTransformerModel();
+
+console.log(styleTransfer.styleNet, styleTransfer.transformNet);
 
 export default {
   name: "StylizePanelLayout",
@@ -83,6 +100,23 @@ export default {
       contentOptions: [ // 'Take a picture', 'Select from file',
         'stata', 'diana', 'golden_gate', 'beach', 'chicago', 'statue_of_liberty'],
     };
+  },
+  methods: {
+    transferStyle: function() {
+      // Not pretty... but it works with composition
+      let styleImgA = this.$refs.styleImgA.$refs.image;
+      let styleImgB = this.$refs.styleImgB.$refs.image;
+      let contentImg = this.$refs.contentImg.$refs.image;
+
+      // styleTransfer.transfer(styleImgA, styleImgB, contentImg);
+      alert('Time to have fun!' + contentImg.src);
+
+      let styleRatio = 0.8;
+      let reportStatus = (msg) => console.log(msg);
+      let destination = this.$refs.canvas;
+
+      styleTransfer.startStyling({ contentImg, styleImg: styleImgA, styleRatio, destination, reportStatus });
+    }
   }
 };
 

@@ -8,7 +8,7 @@
       <v-layout row>
         <v-flex grow>
           <v-card dark>
-            <v-btn color="pink" block>{{ buttonLabel }}</v-btn>
+            <v-btn color="pink" block @click="styleAction">{{ buttonLabel }}</v-btn>
           </v-card>
         </v-flex>
         <v-flex shrink>
@@ -38,6 +38,11 @@ export default {
     return {
       slider: ""
     };
+  },
+  methods: {
+    styleAction: function() {
+      this.$emit('styleAction');
+    }
   }
 };
 </script>

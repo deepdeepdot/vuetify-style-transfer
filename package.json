@@ -10,7 +10,8 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
-    "vuetify": "^1.5.5"
+    "vuetify": "^1.5.5",
+    "@tensorflow/tfjs": "~1.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",
