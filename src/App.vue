@@ -5,8 +5,8 @@
         <span>Arbitrary Style Transfer in the Browser</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
-        <span class="mr-2">Latest Release</span>
+      <v-btn flat href="https://reiinakano.github.io/arbitrary-image-stylization-tfjs/" target="_blank">
+        <span class="mr-2">Based on Reiichiro Nakano</span>
       </v-btn>
     </v-toolbar>
 

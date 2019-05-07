@@ -4,9 +4,11 @@
       <v-flex d-flex xs12>
         <v-layout row justify-center>
           <v-flex xs12>
-            <v-card>
-              <v-img :src="imgUrl" height="400px"/>
-            </v-card>
+            <v-layout row justify-center>
+              <v-card>
+                <img :src="imgUrl" style="max-width:100%">
+              </v-card>
+            </v-layout>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -41,13 +43,5 @@ export default {
   })
 };
 
-// TODO: full size in a row (why it's chopped by 70%?)
 </script>
-
-<style>
-
-.v-image__image .v-image__image--cover {
-}
-
-</style>
 
