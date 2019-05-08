@@ -36,7 +36,6 @@
                         @change='setSelectedImage($event)'
                         :items='selectLabels'
                         label='Select content'
-                        solo
                     >
                     </v-select>
                   </v-flex>

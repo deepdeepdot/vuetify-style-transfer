@@ -13,7 +13,7 @@ function imgToTensor(img) {
     return tf.browser.fromPixels(img).toFloat().div(tf.scalar(255)).expandDims();
 }
 
-let model = {
+const model = {
     MOBILE_STYLE_NET: 'saved_model_style_js/model.json',
     INCEPTION_STYLE_NET: 'saved_model_style_inception_js/model.json',
     ORIGINAL_TRANSFORM_NET: 'saved_model_transformer_js/model.json',
@@ -27,13 +27,14 @@ let transformNet = null;
 let nets = {};
 
 async function loadModel(type) {
-    if (!nets[type]) {
-        nets[type] = await tf.loadGraphModel(model[type]);
-    }
-    return nets[type];
+  if (!nets[type]) {
+    nets[type] = await tf.loadGraphModel(model[type]);
+  }
+  return nets[type];
 }
 
 export default class StyleTransfer {
+
     loadMobileNetStyleModel() {
         const modelLoad = loadModel('MOBILE_STYLE_NET');
         modelLoad.then(function(result) {

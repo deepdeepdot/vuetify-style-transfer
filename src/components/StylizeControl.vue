@@ -25,12 +25,16 @@
 
       <v-layout row>
         <v-flex>
-          <v-select :items="items" outline></v-select>
-        </v-flex>
-        <v-flex>
-          <v-select :items="items" outline></v-select>
+          <v-select :items="styleOptions" @change="loadStyle($event)"></v-select>
         </v-flex>
       </v-layout>
+
+      <v-layout row>
+        <v-flex>
+          <v-select :items="transformOptions" @change="loadTransform($event)"></v-select>
+        </v-flex>
+      </v-layout>
+
     </v-container>
   </div>
 </template>
@@ -38,15 +42,25 @@
 <script>
 export default {
   name: "StylizeControl",
-  props: ["sliderLabel", "buttonLabel", "items"],
+  props: ["sliderLabel", "buttonLabel"],
   data: function() {
     return {
-      slider: 80
+      slider: 80,
+      styleOptions: ["[Fast] Distilled MobileNet style model (9.6MB)", "[High quality] Original Inceptionv3 style model (36.3MB)"],
+      transformOptions: ["[Fast] Separable_conv2d transformer (2.4MB)", "[High quality] Original transformer model (7.9MB)"],
     };
   },
   methods: {
     styleAction: function() {
       this.$emit('styleAction');
+    },
+    loadStyle: function(event) {
+      let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET';
+      this.$emit('loadStyle', type);
+    },
+    loadTransform: function(event) {
+      let type = event.startsWith('[Fast]') ? 'ORIGINAL_TRANSFORM_NET': 'SEPARABLE_TRANSFORM_NET';
+      this.$emit('loadTransform', event);
     }
   }
 };

@@ -8,7 +8,7 @@
             sliderLabel="Style image A size"
             imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
             :options="styleOptions"
-            @imageSelected="updateInputImage($event, 0)"
+            @imageSelected="updateImageSource($event, 0)"
           />
         </v-flex>
 
@@ -18,7 +18,7 @@
             sliderLabel="Style image B size"
             imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
             :options="styleOptions"
-            @imageSelected="updateInputImage($event, 1)"
+            @imageSelected="updateImageSource($event, 1)"
           />
         </v-flex>
 
@@ -31,7 +31,7 @@
                   sliderLabel="Content image size"
                   imgUrl="https://cdn.vuetifyjs.com/images/cards/plane.jpg"
                   :options="contentOptions"
-                  @imageSelected="updateInputImage($event, 2)"
+                  @imageSelected="updateImageSource($event, 2)"
                 />
               </v-card>
             </v-flex>
@@ -46,8 +46,9 @@
                   ref="styleControl"
                   buttonLabel="Combine Styles"
                   sliderLabel="Stylization Ratio"
-                  :items="items"
                   @styleAction="transferStyle()"
+                  @loadStyle="loadStyle($event)"
+                  @loadTransform="loadTransform($event)"
                 />
               </v-card>
             </v-flex>
@@ -85,7 +86,6 @@ let styleTransfer = new StyleTransfer();
 styleTransfer.loadMobileNetStyleModel();
 styleTransfer.loadOriginalTransformerModel();
 
-
 function loadImageFromFile(image, fileSelect) {
   fileSelect.onchange = (evt) => {
     let f = evt.target.files[0];
@@ -108,8 +108,6 @@ export default {
   },
   data: function() {
     return {
-      showModal: false,
-      items: ["Take a picture", "Select from file", "Fizz", "Buzz"],
       styleOptions: [ 'Select from file', 'Random image from wikiart.org',
         'udnie', 'stripes', 'bricks', 'clouds', 'towers', 'sketch', 'seaport', 'red_circles', 'zigzag'],
       contentOptions: [ 'Take a picture', 'Select from file',
@@ -117,7 +115,7 @@ export default {
     };
   },
   methods: {
-    updateInputImage: function(selected, idx) {
+    updateImageSource: function(selected, idx) {
       let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
           image = this.$refs[mapping[idx]].$refs['image'],
           url;
@@ -155,6 +153,22 @@ export default {
         destination: this.$refs.canvas,
       };
       styleTransfer.startStyling(params);
+    },
+    loadStyle: function(name) {
+      alert(name);
+      if (name == MOBILE_STYLE_NET) {
+        styleTransfer.loadMobileNetStyleModel();
+      } else {
+        styleTransfer.loadInceptionStyleModel();
+      }
+    },
+    loadTransform: function(name) {
+      alert(name);
+      if (name == ORIGINAL_TRANSFORM_NET) {
+        styleTransfer.loadOriginalTransformerModel();
+      } else {
+        styleTransfer.loadSeparableTransformerModel();
+      }
     }
   }
 };
