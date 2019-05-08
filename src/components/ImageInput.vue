@@ -61,7 +61,6 @@ function idToLabel(id) {
 export default {
   props: ['sliderLabel', 'imgUrl', 'options'],
   data: () => ({
-    select: '',
     slider: '50',
     selected: null,
   }),
@@ -74,9 +73,6 @@ export default {
       }
   },
   methods: {
-    jump: function(event) {
-        alert('Ho: '+ event);
-    },
     setSelectedImage(event) {
         this.$emit('imageSelected', event);
         // https://stackoverflow.com/questions/48869649/clearing-select-field-automatically-after-selecting-item

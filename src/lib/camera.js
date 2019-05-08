@@ -5,7 +5,6 @@ export default class CameraCapture {
     constructor(videoId) {
         this.videoId = videoId;
         this.videoStream = null;
-        this.webcamVideoElement = document.getElementById(videoId);
     }
 
     activate() {

@@ -1,0 +1,17 @@
+* Tensorflow.js
+Custom version
+    - Upgrade to latest version of tf 1.1.2 (needs to fix window.fetch.bind(window))
+    - model.predit() pass a callback to report about progress
+
+---
+* Dataset for Art
+-> Kanata Art
+
+Add router to handle queries for styles
+    #/art/kanata
+
+---
+Options for uploading, emailing and posting and sharing
+
+---
+

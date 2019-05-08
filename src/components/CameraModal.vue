@@ -34,6 +34,7 @@ export default {
   methods: {
     captureImage: function(image) {
       cameraCapture.setImageDestination(image);
+      cameraCapture.activate();
       this.dialog = true;
     },
     snap: async function() {
@@ -44,10 +45,8 @@ export default {
     }
   },
   watch: {
-    dialog: function(newValue, oldValue) {
-      if (newValue) {
-        cameraCapture.activate();
-      } else {
+    dialog: function(show, oldValue) {
+      if (!show) {
         cameraCapture.deactivate();
       }
     }

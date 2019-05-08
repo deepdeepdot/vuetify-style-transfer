@@ -171,7 +171,9 @@ if (showCanvas) {
 </script>
 
 <style>
+
 canvas {
   outline: 10px lime solid;
 }
+
 </style>
