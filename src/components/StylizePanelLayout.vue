@@ -62,7 +62,7 @@
 
         <v-flex d-flex xs12>
           <v-layout row justify-center>
-            <ModalCamera ref="modal-camera"/>
+            <CameraModal ref="modal-camera"/>
           </v-layout>
         </v-flex>
 
@@ -76,7 +76,7 @@
 <script>
 import ImageInput from "./ImageInput";
 import StylizeControl from "./StylizeControl";
-import ModalCamera from "./ModalCamera";
+import CameraModal from "./CameraModal";
 
 import StyleTransfer from "../lib/StyleTransfer";
 import links from "./links";
@@ -104,7 +104,7 @@ export default {
   components: {
     ImageInput,
     StylizeControl,
-    ModalCamera
+    CameraModal
   },
   data: function() {
     return {
