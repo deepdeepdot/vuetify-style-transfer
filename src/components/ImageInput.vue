@@ -6,7 +6,7 @@
           <v-flex xs12>
             <v-layout row justify-center>
               <v-card>
-                <img ref="image" :src="imageUrl" style="max-width:100%" crossorigin="anonymous">
+                <img ref="image" :src="imgUrl" style="max-width:100%" crossorigin="anonymous">
               </v-card>
             </v-layout>
           </v-flex>
@@ -28,8 +28,10 @@
                   </v-flex>
                   <v-flex xs12 md12>
                     <v-select
-                        @change="onSelectChange($event)"
-                        :items="selectLabels" label="Select content" solo
+                        @change="onSelectChange"
+                        :items="selectLabels"
+                        label="Select content"
+                        solo
                     >
                     </v-select>
                   </v-flex>
@@ -51,30 +53,19 @@ function idToLabels(id) {
     ).join(' ');
 }
 
-function labelToId(label) {
-    return label.toLowerCase().replace(/ /g, '_');
-}
-
 export default {
   props: ["sliderLabel", "imgUrl", "items"],
   data: () => ({
     slider: "",
-    newImageUrl: ''
   }),
   computed: {
-      imageUrl: function() {
-          return this.newImageUrl || this.imgUrl;
-      },
       selectLabels: function() {
           return this.items.map(idToLabels);
       }
   },
   methods: {
     onSelectChange(event) {
-        // this.$emit('imageSelected', event);
-        let id = labelToId(event);
-        this.newImageUrl = `/images/${id}.jpg`;
-        console.log(id);
+        this.$emit('imageSelected', event);
     }
   }
 };

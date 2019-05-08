@@ -7,7 +7,6 @@
           v-model="slider"
           :label="sliderLabel"
           thumb-label="always"
-          value=100
         ></v-slider>
       </v-layout>
 

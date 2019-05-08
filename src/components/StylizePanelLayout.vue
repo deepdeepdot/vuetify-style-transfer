@@ -5,18 +5,20 @@
         <v-flex d-flex xs12 sm6>
           <ImageInput
             ref="styleImgA"
-            imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
+            :imgUrl="imageUrls[0]"
             sliderLabel="Style image A size"
             :items="styleOptions"
+            @imageSelected="updateInputImage($event, 0)"
           />
         </v-flex>
 
         <v-flex d-flex xs12 sm6>
           <ImageInput
             ref="styleImgB"
-            imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
+            :imgUrl="imageUrls[1]"
             sliderLabel="Style image B size"
             :items="styleOptions"
+            @imageSelected="updateInputImage($event, 1)"
           />
         </v-flex>
 
@@ -26,9 +28,10 @@
               <v-card flat>
                 <ImageInput
                   ref="contentImg"
-                  imgUrl="https://cdn.vuetifyjs.com/images/cards/plane.jpg"
+                  :imgUrl="imageUrls[2]"
                   sliderLabel="Content image size"
                   :items="contentOptions"
+                  @imageSelected="updateInputImage($event, 2)"
                 />
               </v-card>
             </v-flex>
@@ -74,17 +77,9 @@ import StylizeControl from "./StylizeControl";
 import ModalCamera from "./ModalCamera";
 import StyleTransfer from "../lib/StyleTransfer";
 
-// function StyleTransfer() {
-//   return {
-//     transfer: function() { alert('lets move it'); }
-//   }
-// }
-
 let styleTransfer = new StyleTransfer();
-styleTransfer.loadMobileNetStyleModel().then();
+styleTransfer.loadMobileNetStyleModel();
 styleTransfer.loadOriginalTransformerModel();
-
-console.log(styleTransfer.styleNet, styleTransfer.transformNet);
 
 export default {
   name: "StylizePanelLayout",
@@ -95,14 +90,37 @@ export default {
   },
   data: function() {
     return {
+      imageUrls: [
+        "https://cdn.vuetifyjs.com/images/cards/road.jpg",
+        "https://cdn.vuetifyjs.com/images/cards/house.jpg",
+        "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
+      ],
       items: ["Take a picture", "Select from file", "Fizz", "Buzz"],
-      styleOptions: [ // 'Select from file', 'Random image from wikiart.org',
+      styleOptions: [ 'Select from file', 'Random image from wikiart.org',
         'udnie', 'stripes', 'bricks', 'clouds', 'towers', 'sketch', 'seaport', 'red_circles', 'zigzag'],
-      contentOptions: [ // 'Take a picture', 'Select from file',
+      contentOptions: [ 'Take a picture', 'Select from file',
         'stata', 'diana', 'golden_gate', 'beach', 'chicago', 'statue_of_liberty'],
     };
   },
   methods: {
+    updateInputImage: function(selected, idx) {
+      alert(selected);
+
+      switch (selected) {
+        case 'Take a picture':
+          alert('Take a picture');
+          break;
+        case 'Select from file':
+          alert('Select from file');
+          break;
+        case 'Random image from wikiart.org':
+          alert('Random from wikiart');
+          break;
+        default:
+          const url = `/images/${selected}.jpg`;
+          this.$set(this.imageUrls, idx, url);
+      }
+    },
     transferStyle: function() {
       let styleImgA = this.$refs.styleImgA.$refs['image'];
       let styleImgB = this.$refs.styleImgB.$refs['image'];
@@ -110,7 +128,7 @@ export default {
       let slider = this.$refs.styleControl.$refs['slider'];
 
       let styleRatio = slider.value? slider.value/100 : 1;
-      // alert('Time to have fun!' + contentImg.src);
+
       let params = {
         contentImg,
         styleImg: styleImgA,
