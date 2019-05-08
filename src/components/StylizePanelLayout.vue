@@ -96,9 +96,9 @@ export default {
         "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
       ],
       items: ["Take a picture", "Select from file", "Fizz", "Buzz"],
-      styleOptions: [ 'Select from file', 'Random image from wikiart.org',
+      styleOptions: [ // 'Select from file', 'Random image from wikiart.org',
         'udnie', 'stripes', 'bricks', 'clouds', 'towers', 'sketch', 'seaport', 'red_circles', 'zigzag'],
-      contentOptions: [ 'Take a picture', 'Select from file',
+      contentOptions: [ // 'Take a picture', 'Select from file',
         'stata', 'diana', 'golden_gate', 'beach', 'chicago', 'statue_of_liberty'],
     };
   },
@@ -108,13 +108,10 @@ export default {
 
       switch (selected) {
         case 'Take a picture':
-          alert('Take a picture');
           break;
         case 'Select from file':
-          alert('Select from file');
           break;
         case 'Random image from wikiart.org':
-          alert('Random from wikiart');
           break;
         default:
           const url = `/images/${selected}.jpg`;
@@ -122,12 +119,11 @@ export default {
       }
     },
     transferStyle: function() {
-      let styleImgA = this.$refs.styleImgA.$refs['image'];
-      let styleImgB = this.$refs.styleImgB.$refs['image'];
-      let contentImg = this.$refs.contentImg.$refs['image'];
-      let slider = this.$refs.styleControl.$refs['slider'];
-
-      let styleRatio = slider.value? slider.value/100 : 1;
+      let styleImgA = this.$refs.styleImgA.$refs['image'],
+          styleImgB = this.$refs.styleImgB.$refs['image'],
+          contentImg = this.$refs.contentImg.$refs['image'],
+          slider = this.$refs.styleControl.$refs['slider'],
+          styleRatio = slider.value? slider.value/100 : 1;
 
       let params = {
         contentImg,

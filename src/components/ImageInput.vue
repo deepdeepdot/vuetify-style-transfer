@@ -53,6 +53,10 @@ function idToLabels(id) {
     ).join(' ');
 }
 
+function labelToId(label) {
+    return label.toLowerCase().replace(/ /g, '_');
+}
+
 export default {
   props: ["sliderLabel", "imgUrl", "items"],
   data: () => ({
@@ -65,7 +69,7 @@ export default {
   },
   methods: {
     onSelectChange(event) {
-        this.$emit('imageSelected', event);
+        this.$emit('imageSelected', labelToId(event));
     }
   }
 };
