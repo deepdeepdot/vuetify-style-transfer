@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-layout row>
         <v-slider
-          ref="slider
+          ref="slider"
           v-model="slider"
           :label="sliderLabel"
           thumb-label="always"
