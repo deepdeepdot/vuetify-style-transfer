@@ -6,7 +6,7 @@
           ref="slider"
           v-model="slider"
           :label="sliderLabel"
-          thumb-label="always"
+          thumb-label
         ></v-slider>
       </v-layout>
 

@@ -20,6 +20,7 @@ let model = {
     SEPARABLE_TRANSFORM_NET: 'saved_model_transformer_separable_js/model.json',
 };
 
+// Clarity vs flexibility
 // Clarity: Less 'this' vs support for multiple instances of StyleTransfer
 let styleNet = null;
 let transformNet = null;

@@ -6,7 +6,7 @@
           <ImageInput
             ref="styleImgA"
             sliderLabel="Style image A size"
-            :imgUrl="imageUrls[0]"
+            imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
             :options="styleOptions"
             @imageSelected="updateInputImage($event, 0)"
           />
@@ -16,7 +16,7 @@
           <ImageInput
             ref="styleImgB"
             sliderLabel="Style image B size"
-            :imgUrl="imageUrls[1]"
+            imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
             :options="styleOptions"
             @imageSelected="updateInputImage($event, 1)"
           />
@@ -29,7 +29,7 @@
                 <ImageInput
                   ref="contentImg"
                   sliderLabel="Content image size"
-                  :imgUrl="imageUrls[2]"
+                  imgUrl="https://cdn.vuetifyjs.com/images/cards/plane.jpg"
                   :options="contentOptions"
                   @imageSelected="updateInputImage($event, 2)"
                 />
@@ -47,7 +47,7 @@
                   buttonLabel="Combine Styles"
                   sliderLabel="Stylization Ratio"
                   :items="items"
-                  @styleAction="transferStyle"
+                  @styleAction="transferStyle()"
                 />
               </v-card>
             </v-flex>
@@ -62,7 +62,7 @@
 
         <v-flex d-flex xs12>
           <v-layout row justify-center>
-            <ModalCamera/>
+            <ModalCamera ref="modal-camera"/>
           </v-layout>
         </v-flex>
 
@@ -108,11 +108,7 @@ export default {
   },
   data: function() {
     return {
-      imageUrls: [
-        "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-        "https://cdn.vuetifyjs.com/images/cards/house.jpg",
-        "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-      ],
+      showModal: false,
       items: ["Take a picture", "Select from file", "Fizz", "Buzz"],
       styleOptions: [ 'Select from file', 'Random image from wikiart.org',
         'udnie', 'stripes', 'bricks', 'clouds', 'towers', 'sketch', 'seaport', 'red_circles', 'zigzag'],
@@ -123,10 +119,12 @@ export default {
   methods: {
     updateInputImage: function(selected, idx) {
       let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
-          image = this.$refs[mapping[idx]].$refs['image'];
+          image = this.$refs[mapping[idx]].$refs['image'],
+          url;
 
       switch (selected) {
         case 'Take a picture':
+          this.$refs['modal-camera'].captureImage(image);
           break;
         case 'Select from file':
           let fileSelect = this.$refs.fileSelect;
@@ -134,11 +132,12 @@ export default {
           break;
         case 'Random image from wikiart.org':
           let randomNumber = Math.floor(Math.random()*links.length);
-          image.src = links[randomNumber];
+          url = links[randomNumber];
+          image.src = url;
           break;
         default:
-          let url = `/images/${selected}.jpg`;
-          this.$set(this.imageUrls, idx, url);
+          url = `/images/${selected}.jpg`;
+          image.src = url;
       }
     },
     transferStyle: function() {

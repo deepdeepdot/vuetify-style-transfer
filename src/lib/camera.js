@@ -1,54 +1,51 @@
+// Rewritten based on:
+// https://mdn-samples.mozilla.org/s/webrtc-capturestill/capture.js
 
-function initalizeWebcamVariables() {
+export default class CameraCapture {
+    constructor(videoId) {
+        this.videoId = videoId;
+        this.videoStream = null;
+        this.webcamVideoElement = document.getElementById(videoId);
+    }
 
-    let webcamVideoElement = document.getElementById('webcam-video');
+    activate() {
+        let video = document.getElementById(this.videoId);
 
-    navigator.getUserMedia = navigator.getUserMedia ||
-        navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
-        navigator.msGetUserMedia;
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then( (stream) => {
+                this.videoStream = stream;
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+    }
 
-    let videoStream = null;
+    deactivate() {
+        this.videoStream.getTracks()[0].stop();
+    }
 
-    let camModal = $('#cam-modal');
-    camModal.on('hidden.bs.modal', () => {
-        if (videoStream) {
-            videoStream.getTracks()[0].stop();
-        }
-    });
+    setImageDestination(image) {
+        this.imageDestination = image;
+    }
 
-    camModal.on('shown.bs.modal', () => {
-        navigator.getUserMedia(
-            {
-                video: true,
-            },
-            (stream) => {
-                videoStream = stream;
-                webcamVideoElement.srcObject = stream;
-                webcamVideoElement.play();
-            },
-            (err) => {
-                console.error(err);
-            }
-        );
-    });
-
-    let snapButton = document.getElementById('snap-button');
-    snapButton.onclick = () => {
-        let imgElement = null; // TODO: pass contentImg or styleImg... to change src
-        captureImageFromCamera(imgElement);
-        camModal.modal('hide');
+    captureImageFromCamera() {
+        let video = document.getElementById(this.videoId);
+        capture(video, this.imageDestination);
     }
 }
 
-function captureImageFromCamera(imgElement) {
-    let video = document.getElementById('webcam-video');
-    // TODO: document.createElement('canvas'); // no need to hide it
-    let canvas = document.getElementById('hidden-canvas');
+function capture(video, image) {
+    if (!video || !image) {
+        throw new Error('Camera capture(video, image) missing args');
+    }
+    let canvas = document.createElement('canvas');
     canvas.width = video.width;
     canvas.height = video.height;
+
     let ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    let imageDataURL = canvas.toDataURL('image/jpg');
-    imgElement.src = imageDataURL;
+    let imageDataURL = canvas.toDataURL('image/png');
+    image.src = imageDataURL;
 }
-
