@@ -5,8 +5,8 @@
         <v-flex d-flex xs12 sm6>
           <ImageInput
             ref="styleImgA"
-            :imgUrl="imageUrls[0]"
             sliderLabel="Style image A size"
+            :imgUrl="imageUrls[0]"
             :options="styleOptions"
             @imageSelected="updateInputImage($event, 0)"
           />
@@ -15,8 +15,8 @@
         <v-flex d-flex xs12 sm6>
           <ImageInput
             ref="styleImgB"
-            :imgUrl="imageUrls[1]"
             sliderLabel="Style image B size"
+            :imgUrl="imageUrls[1]"
             :options="styleOptions"
             @imageSelected="updateInputImage($event, 1)"
           />
@@ -28,8 +28,8 @@
               <v-card flat>
                 <ImageInput
                   ref="contentImg"
-                  :imgUrl="imageUrls[2]"
                   sliderLabel="Content image size"
+                  :imgUrl="imageUrls[2]"
                   :options="contentOptions"
                   @imageSelected="updateInputImage($event, 2)"
                 />
@@ -66,6 +66,8 @@
           </v-layout>
         </v-flex>
 
+        <input type="file" ref="fileSelect" style="display: none" accept="image/x-png,image/gif,image/jpeg"/>
+
       </v-layout>
     </v-container>
   </v-card>
@@ -75,11 +77,27 @@
 import ImageInput from "./ImageInput";
 import StylizeControl from "./StylizeControl";
 import ModalCamera from "./ModalCamera";
+
 import StyleTransfer from "../lib/StyleTransfer";
+import links from "./links";
 
 let styleTransfer = new StyleTransfer();
 styleTransfer.loadMobileNetStyleModel();
 styleTransfer.loadOriginalTransformerModel();
+
+
+function loadImageFromFile(image, fileSelect) {
+  fileSelect.onchange = (evt) => {
+    let f = evt.target.files[0];
+    let fileReader = new FileReader();
+    fileReader.onload = ((e) => {
+      image.src = e.target.result;
+    });
+    fileReader.readAsDataURL(f);
+    fileSelect.value = '';
+  }
+  fileSelect.click();
+}
 
 export default {
   name: "StylizePanelLayout",
@@ -104,17 +122,22 @@ export default {
   },
   methods: {
     updateInputImage: function(selected, idx) {
-      alert(selected);
+      let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
+          image = this.$refs[mapping[idx]].$refs['image'];
 
       switch (selected) {
         case 'Take a picture':
           break;
         case 'Select from file':
+          let fileSelect = this.$refs.fileSelect;
+          loadImageFromFile(image, fileSelect);
           break;
         case 'Random image from wikiart.org':
+          let randomNumber = Math.floor(Math.random()*links.length);
+          image.src = links[randomNumber];
           break;
         default:
-          const url = `/images/${selected}.jpg`;
+          let url = `/images/${selected}.jpg`;
           this.$set(this.imageUrls, idx, url);
       }
     },
@@ -137,7 +160,7 @@ export default {
   }
 };
 
-const showCanvas = true;
+let showCanvas = false;
 if (showCanvas) {
   window.addEventListener("DOMContentLoaded", function(eventt) {
     var c = document.getElementById("canvas-single");

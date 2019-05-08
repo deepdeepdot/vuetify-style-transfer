@@ -6,10 +6,10 @@
           <v-flex xs12>
             <v-layout row justify-center>
               <v-card>
-                <img ref="image"
-                     :src="imgUrl"
-                     style="max-width:100%"
-                     crossorigin="anonymous"
+                <img ref='image'
+                     :src='imgUrl'
+                     style='max-width:100%'
+                     crossorigin='anonymous'
                 >
               </v-card>
             </v-layout>
@@ -25,17 +25,17 @@
                 <v-layout row wrap>
                   <v-flex xs12 md12>
                     <v-slider
-                        v-model="slider"
-                        :label="sliderLabel"
+                        v-model='slider'
+                        :label='sliderLabel'
                         thumb-label
                     ></v-slider>
                   </v-flex>
                   <v-flex xs12 md12>
                     <v-select
-                        @change="setSelectedImage($event)"
-                        :items="selectLabels"
-                        item-text="text"
-                        label="Select content"
+                        v-model="selected"
+                        @change='setSelectedImage($event)'
+                        :items='selectLabels'
+                        label='Select content'
                         solo
                     >
                     </v-select>
@@ -59,9 +59,11 @@ function idToLabel(id) {
 }
 
 export default {
-  props: ["sliderLabel", "imgUrl", "options"],
+  props: ['sliderLabel', 'imgUrl', 'options'],
   data: () => ({
-    slider: "",
+    select: '',
+    slider: '50',
+    selected: null,
   }),
   computed: {
       selectLabels: function() {
@@ -72,8 +74,15 @@ export default {
       }
   },
   methods: {
+    jump: function(event) {
+        alert('Ho: '+ event);
+    },
     setSelectedImage(event) {
         this.$emit('imageSelected', event);
+        // https://stackoverflow.com/questions/48869649/clearing-select-field-automatically-after-selecting-item
+        this.$nextTick(() => {
+            this.selected = null;
+        });
     }
   }
 };
