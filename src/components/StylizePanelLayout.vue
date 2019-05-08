@@ -7,7 +7,7 @@
             ref="styleImgA"
             :imgUrl="imageUrls[0]"
             sliderLabel="Style image A size"
-            :items="styleOptions"
+            :options="styleOptions"
             @imageSelected="updateInputImage($event, 0)"
           />
         </v-flex>
@@ -17,7 +17,7 @@
             ref="styleImgB"
             :imgUrl="imageUrls[1]"
             sliderLabel="Style image B size"
-            :items="styleOptions"
+            :options="styleOptions"
             @imageSelected="updateInputImage($event, 1)"
           />
         </v-flex>
@@ -30,7 +30,7 @@
                   ref="contentImg"
                   :imgUrl="imageUrls[2]"
                   sliderLabel="Content image size"
-                  :items="contentOptions"
+                  :options="contentOptions"
                   @imageSelected="updateInputImage($event, 2)"
                 />
               </v-card>
@@ -96,9 +96,9 @@ export default {
         "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
       ],
       items: ["Take a picture", "Select from file", "Fizz", "Buzz"],
-      styleOptions: [ // 'Select from file', 'Random image from wikiart.org',
+      styleOptions: [ 'Select from file', 'Random image from wikiart.org',
         'udnie', 'stripes', 'bricks', 'clouds', 'towers', 'sketch', 'seaport', 'red_circles', 'zigzag'],
-      contentOptions: [ // 'Take a picture', 'Select from file',
+      contentOptions: [ 'Take a picture', 'Select from file',
         'stata', 'diana', 'golden_gate', 'beach', 'chicago', 'statue_of_liberty'],
     };
   },
