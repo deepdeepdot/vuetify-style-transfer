@@ -6,7 +6,7 @@
           <v-flex xs12>
             <v-layout row justify-center>
               <v-card>
-                <img ref="image" :src="imageUrl" style="max-width:100%">
+                <img ref="image" :src="imageUrl" style="max-width:100%" crossOrigin="anonymous">
               </v-card>
             </v-layout>
           </v-flex>
@@ -50,7 +50,7 @@ function labelToId(label) {
 }
 
 export default {
-  props: ["sliderLabel", "imgUrl", "items", "doSomething"],
+  props: ["sliderLabel", "imgUrl", "items"],
   data: () => ({
     slider: "",
     newImageUrl: ''

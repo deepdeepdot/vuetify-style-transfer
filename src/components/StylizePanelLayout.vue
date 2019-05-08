@@ -103,19 +103,19 @@ export default {
   },
   methods: {
     transferStyle: function() {
-      // Not pretty... but it works with composition
-      let styleImgA = this.$refs.styleImgA.$refs.image;
-      let styleImgB = this.$refs.styleImgB.$refs.image;
-      let contentImg = this.$refs.contentImg.$refs.image;
-
-      // styleTransfer.transfer(styleImgA, styleImgB, contentImg);
+      let styleImgA = this.$refs.styleImgA.$refs['image'];
+      let styleImgB = this.$refs.styleImgB.$refs['image'];
+      let contentImg = this.$refs.contentImg.$refs['image'];
       alert('Time to have fun!' + contentImg.src);
 
-      let styleRatio = 0.8;
-      let reportStatus = (msg) => console.log(msg);
-      let destination = this.$refs.canvas;
-
-      styleTransfer.startStyling({ contentImg, styleImg: styleImgA, styleRatio, destination, reportStatus });
+      let params = {
+        contentImg,
+        styleImg: styleImgA,
+        styleRatio: 0.8,
+        reportStatus: (msg) => console.log(msg),
+        destination: this.$refs.canvas,
+      };
+      styleTransfer.startStyling(params);
     }
   }
 };
