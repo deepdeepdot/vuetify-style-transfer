@@ -40,6 +40,7 @@
             <v-flex xs12 sm6>
               <v-card color>
                 <StylizeControl
+                  ref="styleControl"
                   buttonLabel="Combine Styles"
                   sliderLabel="Stylization Ratio"
                   :items="items"
@@ -106,12 +107,14 @@ export default {
       let styleImgA = this.$refs.styleImgA.$refs['image'];
       let styleImgB = this.$refs.styleImgB.$refs['image'];
       let contentImg = this.$refs.contentImg.$refs['image'];
-      alert('Time to have fun!' + contentImg.src);
+      let slider = this.$refs.styleControl.$refs['slider'];
 
+      let styleRatio = slider.value? slider.value/100 : 1;
+      // alert('Time to have fun!' + contentImg.src);
       let params = {
         contentImg,
         styleImg: styleImgA,
-        styleRatio: 0.8,
+        styleRatio,
         reportStatus: (msg) => console.log(msg),
         destination: this.$refs.canvas,
       };

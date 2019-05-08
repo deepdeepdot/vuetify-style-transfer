@@ -6,7 +6,7 @@
           <v-flex xs12>
             <v-layout row justify-center>
               <v-card>
-                <img ref="image" :src="imageUrl" style="max-width:100%" crossOrigin="anonymous">
+                <img ref="image" :src="imageUrl" style="max-width:100%" crossorigin="anonymous">
               </v-card>
             </v-layout>
           </v-flex>
@@ -20,11 +20,15 @@
               <v-container>
                 <v-layout row wrap>
                   <v-flex xs12 md12>
-                    <v-slider v-model="slider" :label="sliderLabel"></v-slider>
+                    <v-slider
+                        v-model="slider"
+                        :label="sliderLabel"
+                        thumb-label
+                    ></v-slider>
                   </v-flex>
                   <v-flex xs12 md12>
                     <v-select
-                        @change="onChange($event)"
+                        @change="onSelectChange($event)"
                         :items="selectLabels" label="Select content" solo
                     >
                     </v-select>
@@ -42,7 +46,9 @@
 <script>
 
 function idToLabels(id) {
-    return id[0].toUpperCase() + id.substr(1).replace(/_/g, ' ');
+    return id.split('_').map(
+        (word) => word[0].toUpperCase() + word.substr(1)
+    ).join(' ');
 }
 
 function labelToId(label) {
@@ -64,7 +70,8 @@ export default {
       }
   },
   methods: {
-    onChange(event) {
+    onSelectChange(event) {
+        // this.$emit('imageSelected', event);
         let id = labelToId(event);
         this.newImageUrl = `/images/${id}.jpg`;
         console.log(id);

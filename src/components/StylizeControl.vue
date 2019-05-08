@@ -2,7 +2,13 @@
   <div>
     <v-container fluid>
       <v-layout row>
-        <v-slider v-model="slider" :label="sliderLabel"></v-slider>
+        <v-slider
+          ref="slider
+          v-model="slider"
+          :label="sliderLabel"
+          thumb-label="always"
+          value=100
+        ></v-slider>
       </v-layout>
 
       <v-layout row>
@@ -36,7 +42,7 @@ export default {
   props: ["sliderLabel", "buttonLabel", "items"],
   data: function() {
     return {
-      slider: ""
+      slider: 80
     };
   },
   methods: {

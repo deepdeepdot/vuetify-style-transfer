@@ -20,23 +20,21 @@ let model = {
     SEPARABLE_TRANSFORM_NET: 'saved_model_transformer_separable_js/model.json',
 };
 
+// Clarity: Less 'this' vs support for multiple instances of StyleTransfer
 let styleNet = null;
 let transformNet = null;
+let nets = {};
+
+async function loadModel(type) {
+    if (!nets[type]) {
+        nets[type] = await tf.loadGraphModel(model[type]);
+    }
+    return nets[type];
+}
 
 export default class StyleTransfer {
-    constructor() {
-        this.nets = {};
-    }
-
-    async loadModel(type) {
-        if (!this.nets[type]) {
-            this.nets[type] = await tf.loadGraphModel(model[type]);
-        }
-        return this.nets[type];
-    }
-
-    async loadMobileNetStyleModel() {
-        const modelLoad = this.loadModel('MOBILE_STYLE_NET');
+    loadMobileNetStyleModel() {
+        const modelLoad = loadModel('MOBILE_STYLE_NET');
         modelLoad.then(function(result) {
             styleNet = result;
             return result;
@@ -44,8 +42,8 @@ export default class StyleTransfer {
         return modelLoad;
     }
 
-    async loadInceptionStyleModel() {
-        const modelLoad = this.loadModel('INCEPTION_STYLE_NET');
+    loadInceptionStyleModel() {
+        const modelLoad = loadModel('INCEPTION_STYLE_NET');
         modelLoad.then(function (result) {
             styleNet = result;
             return result
@@ -53,8 +51,8 @@ export default class StyleTransfer {
         return modelLoad;
     }
 
-    async loadOriginalTransformerModel() {
-        const modelLoad = this.loadModel('ORIGINAL_TRANSFORM_NET');
+    loadOriginalTransformerModel() {
+        const modelLoad = loadModel('ORIGINAL_TRANSFORM_NET');
         modelLoad.then(function (result) {
             transformNet = result;
             return result
@@ -62,8 +60,8 @@ export default class StyleTransfer {
         return modelLoad;
     }
 
-    async loadSeparableTransformerModel() {
-        const modelLoad = this.loadModel('SEPARABLE_TRANSFORM_NET');
+    loadSeparableTransformerModel() {
+        const modelLoad = loadModel('SEPARABLE_TRANSFORM_NET');
         modelLoad.then(function (result) {
             transformNet = result;
             return result
