@@ -155,16 +155,14 @@ export default {
       styleTransfer.startStyling(params);
     },
     loadStyle: function(name) {
-      alert(name);
-      if (name == MOBILE_STYLE_NET) {
+      if (name == 'MOBILE_STYLE_NET') {
         styleTransfer.loadMobileNetStyleModel();
       } else {
         styleTransfer.loadInceptionStyleModel();
       }
     },
     loadTransform: function(name) {
-      alert(name);
-      if (name == ORIGINAL_TRANSFORM_NET) {
+      if (name == 'ORIGINAL_TRANSFORM_NET') {
         styleTransfer.loadOriginalTransformerModel();
       } else {
         styleTransfer.loadSeparableTransformerModel();

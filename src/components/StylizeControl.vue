@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-container fluid>
+
       <v-layout row>
         <v-slider
           ref="slider"
@@ -25,13 +26,13 @@
 
       <v-layout row>
         <v-flex>
-          <v-select :items="styleOptions" @change="loadStyle($event)"></v-select>
+          <v-select v-model="style" :items="styleOptions" @change="loadStyle($event)"></v-select>
         </v-flex>
       </v-layout>
 
       <v-layout row>
         <v-flex>
-          <v-select :items="transformOptions" @change="loadTransform($event)"></v-select>
+          <v-select v-model="transform" :items="transformOptions" @change="loadTransform($event)"></v-select>
         </v-flex>
       </v-layout>
 
@@ -46,6 +47,9 @@ export default {
   data: function() {
     return {
       slider: 80,
+      // TODO: Will this trigger the loadModal?
+      style: "[Fast] Distilled MobileNet style model (9.6MB)",
+      transform: "[Fast] Separable_conv2d transformer (2.4MB)",
       styleOptions: ["[Fast] Distilled MobileNet style model (9.6MB)", "[High quality] Original Inceptionv3 style model (36.3MB)"],
       transformOptions: ["[Fast] Separable_conv2d transformer (2.4MB)", "[High quality] Original transformer model (7.9MB)"],
     };

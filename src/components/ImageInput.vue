@@ -8,7 +8,6 @@
               <v-card>
                 <img ref='image'
                      :src='imgUrl'
-                     style='max-width:100%'
                      crossorigin='anonymous'
                 >
               </v-card>
@@ -27,7 +26,7 @@
                     <v-checkbox
                       v-model="checkbox"
                       :label="`Force image to square: ${checkbox.toString()}`"
-                      @change="updateSquare($event)"
+                      @change="updateImageSize()"
                     ></v-checkbox>
                   </v-flex>
                   <v-flex xs12 md12>
@@ -81,10 +80,23 @@ export default {
           }));
       }
   },
+  watch: {
+    slider: function() {
+      this.dragging();
+    }
+  },
   methods: {
-    updateSquare: function(square) {
+    dragging: function() {
+      // Maybe add some debouncing...
+      // looks like it's not needed -> focus on dynamic layout (flexible row)
+      this.updateImageSize();
+    },
+    updateImageSize: function() {
+      const square = this.checkbox;
+      const height = this.slider;
+
       const img = this.$refs['image'];
-      img.height = this.slider; // evt.target.value;
+      img.height = height;
       if (img.style.width) {
         // If this branch is triggered, then that means the image was forced to a square using
         // a fixed pixel value.
