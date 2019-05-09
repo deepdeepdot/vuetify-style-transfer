@@ -72,6 +72,10 @@ export default {
     selected: null,
     checkbox: false,
   }),
+  mounted: function mounted() {
+    // "this" is not this: undefined?
+    this.updateImageSize();
+  },
   computed: {
       getItemsForSelect: function() {
           return this.options.map((id) => ({
