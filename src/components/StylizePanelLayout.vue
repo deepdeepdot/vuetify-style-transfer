@@ -169,7 +169,7 @@ export default {
       } else {
         styleTransfer.loadSeparableTransformerModel();
       }
-    }
+    },
   }
 };
 

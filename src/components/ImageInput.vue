@@ -24,17 +24,26 @@
               <v-container>
                 <v-layout row wrap>
                   <v-flex xs12 md12>
+                    <v-checkbox
+                      v-model="checkbox"
+                      :label="`Force image to square: ${checkbox.toString()}`"
+                      @change="updateSquare($event)"
+                    ></v-checkbox>
+                  </v-flex>
+                  <v-flex xs12 md12>
                     <v-slider
                         v-model='slider'
                         :label='sliderLabel'
                         thumb-label
+                        min=200
+                        max=1024
                     ></v-slider>
                   </v-flex>
                   <v-flex xs12 md12>
                     <v-select
                         v-model="selected"
                         @change='setSelectedImage($event)'
-                        :items='selectLabels'
+                        :items='getItemsForSelect'
                         label='Select content'
                     >
                     </v-select>
@@ -60,11 +69,12 @@ function idToLabel(id) {
 export default {
   props: ['sliderLabel', 'imgUrl', 'options'],
   data: () => ({
-    slider: '50',
+    slider: 400,
     selected: null,
+    checkbox: false,
   }),
   computed: {
-      selectLabels: function() {
+      getItemsForSelect: function() {
           return this.options.map((id) => ({
               value: id,
               text: idToLabel(id)
@@ -72,6 +82,20 @@ export default {
       }
   },
   methods: {
+    updateSquare: function(square) {
+      const img = this.$refs['image'];
+      img.height = this.slider; // evt.target.value;
+      if (img.style.width) {
+        // If this branch is triggered, then that means the image was forced to a square using
+        // a fixed pixel value.
+        img.style.width = img.height+'px';  // Fix width back to a square
+      }
+      if (square) {
+        img.style.width = img.height + 'px';
+      } else {
+        img.style.width = '';
+      }
+    },
     setSelectedImage(event) {
         this.$emit('imageSelected', event);
         // https://stackoverflow.com/questions/48869649/clearing-select-field-automatically-after-selecting-item
