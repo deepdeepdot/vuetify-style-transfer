@@ -73,7 +73,6 @@ export default {
     checkbox: false,
   }),
   mounted: function mounted() {
-    // "this" is not this: undefined?
     this.updateImageSize();
   },
   computed: {

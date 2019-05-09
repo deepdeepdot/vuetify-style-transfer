@@ -6,11 +6,13 @@
       <v-card>
         <v-card-title class="headline">Take a snapshot!</v-card-title>
 
-        <video id="webcam-video" class="centered" width="500" height="375"></video>
+        <v-card-media>
+          <video id="webcam-video" width="500" height="375"></video>
+        </v-card-media>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="dialog = false">Cancel</v-btn>
+          <v-btn color="primary" @click="dialog = false">Abort abort...</v-btn>
           <v-btn color="primary" @click="snap">Snap!!</v-btn>
         </v-card-actions>
       </v-card>

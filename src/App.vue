@@ -19,10 +19,13 @@
 <script>
 import StylizePanelLayout from "./components/StylizePanelLayout";
 
+import GridLayout from "./test/GridLayout";
+
 export default {
   name: "App",
   components: {
-    StylizePanelLayout
+    StylizePanelLayout,
+    GridLayout,
   },
   data: function() {
     return {};
