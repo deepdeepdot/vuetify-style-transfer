@@ -2,29 +2,31 @@
   <v-card>
     <v-container fluid grid-list-lg>
       <v-layout row wrap>
-        <v-flex d-flex xs12 sm6>
+        <v-flex d-flex xs12 v-bind="{['sm6']: twoStyles && canFitInSingleRow }">
           <ImageInput
             ref="styleImgA"
             sliderLabel="Style image A size"
             imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 0)"
+            @imageSizeChanged="imageSizeChanged($event, 0)"
             :showSquare="twoStyles"
           />
         </v-flex>
 
-        <v-flex d-flex xs12 sm6>
+        <v-flex v-if="twoStyles" d-flex xs12 v-bind="{ ['sm6']: canFitInSingleRow }">
           <ImageInput
             ref="styleImgB"
             sliderLabel="Style image B size"
             imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 1)"
+            @imageSizeChanged="imageSizeChanged($event, 1)"
             :showSquare="twoStyles"
           />
         </v-flex>
 
-        <v-flex d-flex xs12>
+        <v-flex d-flex xs12  >
           <v-layout row justify-center>
             <v-flex xs12 sm6>
               <v-card flat>
@@ -70,40 +72,44 @@
           </v-layout>
         </v-flex>
 
-        <input type="file" ref="fileSelect" style="display: none" accept="image/x-png,image/gif,image/jpeg"/>
-
+        <input
+          type="file"
+          ref="fileSelect"
+          style="display: none"
+          accept="image/x-png, image/gif, image/jpeg"
+        >
       </v-layout>
     </v-container>
   </v-card>
 </template>
 
 <script>
-import ImageInput from "./ImageInput";
-import StylizeControl from "./StylizeControl";
-import CameraModal from "./CameraModal";
+import ImageInput from './ImageInput';
+import StylizeControl from './StylizeControl';
+import CameraModal from './CameraModal';
 
-import StyleTransfer from "../lib/StyleTransfer";
-import links from "./links";
+import StyleTransfer from '../lib/StyleTransfer';
+import links from './links';
 
 let styleTransfer = new StyleTransfer();
 styleTransfer.loadMobileNetStyleModel();
 styleTransfer.loadOriginalTransformerModel();
 
 function loadImageFromFile(image, fileSelect) {
-  fileSelect.onchange = (evt) => {
+  fileSelect.onchange = evt => {
     let f = evt.target.files[0];
     let fileReader = new FileReader();
-    fileReader.onload = ((e) => {
+    fileReader.onload = e => {
       image.src = e.target.result;
-    });
+    };
     fileReader.readAsDataURL(f);
     fileSelect.value = '';
-  }
+  };
   fileSelect.click();
 }
 
-export default {
-  name: "StylizePanelLayout",
+const StylizePanelLayout = {
+  name: 'StylizePanelLayout',
   components: {
     ImageInput,
     StylizeControl,
@@ -114,16 +120,53 @@ export default {
   },
   data: function() {
     return {
-      styleOptions: [ 'Select from file', 'Random image from wikiart.org',
-        'udnie', 'stripes', 'bricks', 'clouds', 'towers', 'sketch', 'seaport', 'red_circles', 'zigzag'],
-      contentOptions: [ 'Take a picture', 'Select from file',
-        'stata', 'diana', 'golden_gate', 'beach', 'chicago', 'statue_of_liberty'],
+      canFitInSingleRow: true,
+      styleOptions: [
+        'Select from file',
+        'Random image from wikiart.org',
+        'udnie',
+        'stripes',
+        'bricks',
+        'clouds',
+        'towers',
+        'sketch',
+        'seaport',
+        'red_circles',
+        'zigzag'
+      ],
+      contentOptions: [
+        'Take a picture',
+        'Select from file',
+        'stata',
+        'diana',
+        'golden_gate',
+        'beach',
+        'chicago',
+        'statue_of_liberty'
+      ]
     };
   },
   methods: {
+    imageSizeChanged: function(size, idx) {
+      // console.log(idx + '/' + size);
+      const styleImgA = this.$refs['styleImgA'];
+      const styleImgB = this.$refs['styleImgB'];
+
+      if (styleImgB) {
+        console.log(styleImgA.slider + '/' + styleImgB.slider);
+        // check against half of window.innerWidth
+        // And/or the sum of both (up to some min: 350px)
+
+        // Simpler to test:
+        this.canFitInSingleRow = styleImgA.slider < 450 && styleImgB.slider < 450; // or false
+        // It does the trick, but the jumping and "out of sync" dragging is disturbing
+      }
+    },
     updateImageSource: function(selected, idx) {
       let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
           image = this.$refs[mapping[idx]].$refs['image'],
+          randomNumber,
+          fileSelect,
           url;
 
       switch (selected) {
@@ -131,11 +174,11 @@ export default {
           this.$refs['modal-camera'].captureImage(image);
           break;
         case 'Select from file':
-          let fileSelect = this.$refs.fileSelect;
+          fileSelect = this.$refs['fileSelect'];
           loadImageFromFile(image, fileSelect);
           break;
         case 'Random image from wikiart.org':
-          let randomNumber = Math.floor(Math.random()*links.length);
+          randomNumber = Math.floor(Math.random() * links.length);
           url = links[randomNumber];
           image.src = url;
           break;
@@ -149,14 +192,14 @@ export default {
           styleImgB = this.$refs.styleImgB.$refs['image'],
           contentImg = this.$refs.contentImg.$refs['image'],
           slider = this.$refs.styleControl.$refs['slider'],
-          styleRatio = slider.value? slider.value/100 : 1;
+          styleRatio = slider.value ? slider.value / 100 : 1;
 
       let params = {
         contentImg,
         styleImg: styleImgA,
         styleRatio,
-        reportStatus: (msg) => console.log(msg),
-        destination: this.$refs.canvas,
+        reportStatus: msg => console.log(msg),
+        destination: this.$refs.canvas
       };
       styleTransfer.startStyling(params);
     },
@@ -173,25 +216,16 @@ export default {
       } else {
         styleTransfer.loadSeparableTransformerModel();
       }
-    },
+    }
   }
 };
 
-let showCanvas = false;
-if (showCanvas) {
-  window.addEventListener("DOMContentLoaded", function(eventt) {
-    var c = document.getElementById("canvas-single");
-    var ctx = c.getContext("2d");
-    ctx.fillStyle = "#ffcc00";
-    ctx.fillRect(0, 0, 400, 400);
-  });
-}
+export default StylizePanelLayout;
+
 </script>
 
 <style>
-
 canvas {
   outline: 10px lime solid;
 }
-
 </style>

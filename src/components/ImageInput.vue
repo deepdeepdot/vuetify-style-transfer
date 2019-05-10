@@ -5,12 +5,10 @@
         <v-layout row justify-center>
           <v-flex xs12>
             <v-layout row justify-center>
-              <v-card>
                 <img ref='image'
                      :src='imgUrl'
                      crossorigin='anonymous'
                 >
-              </v-card>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -18,9 +16,9 @@
 
       <v-flex d-flex xs12>
         <v-layout row justify-center>
-          <v-flex xs10>
+          <v-flex xs12>
             <v-card flat>
-              <v-container>
+              <v-container style="max-width:500px">
                 <v-layout row wrap>
                   <v-flex xs12 md12>
                     <v-checkbox v-if="showSquare"
@@ -33,9 +31,8 @@
                     <v-slider
                         v-model='slider'
                         :label='sliderLabel'
-                        thumb-label
-                        min=200
-                        max=1024
+                        min=100
+                        max=500
                     ></v-slider>
                   </v-flex>
                   <v-flex xs12 md12>
@@ -68,7 +65,7 @@ function idToLabel(id) {
 export default {
   props: ['sliderLabel', 'imgUrl', 'options', 'showSquare'],
   data: () => ({
-    slider: 400,
+    slider: 300,
     selected: null,
     checkbox: false,
   }),
@@ -90,8 +87,7 @@ export default {
   },
   methods: {
     dragging: function() {
-      // Maybe add some debouncing...
-      // looks like it's not needed -> focus on dynamic layout (flexible row)
+      this.$emit('imageSizeChanged', this.slider);
       this.updateImageSize();
     },
     updateImageSize: function() {
