@@ -6,11 +6,12 @@
           <ImageInput
             ref="styleImgA"
             sliderLabel="Style image A size"
-            imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
+            imgUrl="http://cdn.vuetifyjs.com/images/cards/road.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 0)"
             @imageSizeChanged="imageSizeChanged($event, 0)"
             :showSquare="twoStyles"
+            :resetSelectedOptions="resetOptions"
           />
         </v-flex>
 
@@ -18,11 +19,12 @@
           <ImageInput
             ref="styleImgB"
             sliderLabel="Style image B size"
-            imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
+            imgUrl="http://cdn.vuetifyjs.com/images/cards/house.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 1)"
             @imageSizeChanged="imageSizeChanged($event, 1)"
             :showSquare="twoStyles"
+            :resetSelectedOptions="resetOptions"
           />
         </v-flex>
 
@@ -33,13 +35,20 @@
                 <ImageInput
                   ref="contentImg"
                   sliderLabel="Content image size"
-                  imgUrl="https://cdn.vuetifyjs.com/images/cards/plane.jpg"
+                  imgUrl="http://cdn.vuetifyjs.com/images/cards/plane.jpg"
                   :options="contentOptions"
                   @imageSelected="updateImageSource($event, 2)"
                   :showSquare="twoStyles"
+                  :resetSelectedOptions="resetOptions"
                 />
               </v-card>
             </v-flex>
+          </v-layout>
+        </v-flex>
+
+        <v-flex d-flex xs12>
+          <v-layout row justify-center>
+            <canvas ref="canvas" id="canvas-single" width="400px" height="200px"></canvas>
           </v-layout>
         </v-flex>
 
@@ -57,12 +66,6 @@
                 />
               </v-card>
             </v-flex>
-          </v-layout>
-        </v-flex>
-
-        <v-flex d-flex xs12>
-          <v-layout row justify-center>
-            <canvas ref="canvas" id="canvas-single" width="400px" height="400px"></canvas>
           </v-layout>
         </v-flex>
 
@@ -123,6 +126,11 @@ const StylizePanelLayout = {
   data: function() {
     return {
       canFitInSingleRow: true,
+      resetOptions: [
+        'Random image from wikiart.org',
+        'Select from file',
+        'Take a picture',
+      ],
       styleOptions: [
         'Select from file',
         'Random image from wikiart.org',
@@ -145,12 +153,11 @@ const StylizePanelLayout = {
         'beach',
         'chicago',
         'statue_of_liberty'
-      ]
+      ],
     };
   },
   methods: {
     imageSizeChanged: function(size, idx) {
-      // console.log(idx + '/' + size);
       const styleImgA = this.$refs['styleImgA'];
       const styleImgB = this.$refs['styleImgB'];
 
@@ -159,8 +166,8 @@ const StylizePanelLayout = {
         // And/or the sum of both (up to some min: 350px)
 
         // Simpler to test:
-        this.canFitInSingleRow = styleImgA.slider < 450 && styleImgB.slider < 450; // or false
-        // It does the trick, but the jumping and "out of sync" dragging is disturbing
+        this.canFitInSingleRow = styleImgA.slider < 450 && styleImgB.slider < 450;
+        // It does the trick, but the jumping and "out of sync" dragging is not nice
       }
     },
     updateImageSource: function(selected, idx) {
@@ -190,7 +197,6 @@ const StylizePanelLayout = {
     },
     transferStyle: function() {
       let styleImgA = this.$refs.styleImgA.$refs['image'],
-          styleImgB = this.$refs.styleImgB.$refs['image'],
           contentImg = this.$refs.contentImg.$refs['image'],
           slider = this.$refs.styleControl.$refs['slider'],
           styleRatio = slider.value ? slider.value / 100 : 1;
@@ -202,7 +208,16 @@ const StylizePanelLayout = {
         reportStatus: msg => console.log(msg),
         destination: this.$refs.canvas
       };
-      styleTransfer.startStyling(params);
+
+      if (this.twoStyles) {
+        alert('not implemented');
+        let styleImgB = this.$refs.styleImgB.$refs['image'];
+        // params = { ...params};
+        // startCombining({ combContentImg, combStyleImg1, combStyleImg2, combStyleRatio, destination, reportStatus }) {
+        // styleTransfer.startCombining(params);
+      } else{
+        styleTransfer.startStyling(params);
+      }
     },
     loadStyle: function(name) {
       if (name == 'MOBILE_STYLE_NET') {
@@ -226,11 +241,10 @@ export default StylizePanelLayout;
 </script>
 
 <style>
-canvas {
-  outline: 10px lime solid;
-}
+
 .filler {
   display: block;
   height: 50px important!;
 }
+
 </style>

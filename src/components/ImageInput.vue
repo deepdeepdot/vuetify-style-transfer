@@ -18,7 +18,7 @@
       <v-flex d-flex xs12>
         <v-layout row justify-center>
           <v-flex xs12>
-            <v-card flat class="image-controls">
+            <v-card class="image-controls">
               <v-container>
                 <v-layout row wrap>
 
@@ -76,15 +76,21 @@ function idToLabel(id) {
 }
 
 export default {
-  props: ['sliderLabel', 'imgUrl', 'options', 'showSquare'],
+  props: {
+    sliderLabel: String,
+    imgUrl: String,
+    options: Array,
+    showSquare: Boolean,
+    resetSelectedOptions: Array,
+  },
+  mounted: function() {
+    this.updateImageSize();
+  },
   data: () => ({
     slider: 300,
     selected: null,
     checkbox: false,
   }),
-  mounted: function mounted() {
-    this.updateImageSize();
-  },
   computed: {
       getItemsForSelect: function() {
           return this.options.map((id) => ({
@@ -123,7 +129,7 @@ export default {
     setSelectedImage(event) {
       this.$emit('imageSelected', event);
 
-      if (this.selected == 'Random image from wikiart.org') {
+      if (this.resetSelectedOptions.includes(this.selected)) {
         // https://stackoverflow.com/questions/48869649/clearing-select-field-automatically-after-selecting-item
         this.$nextTick(() => {
             this.selected = null;
@@ -140,7 +146,6 @@ export default {
 .filler {
   display: block;
   height: 30px !important;
-  /* background-color: pink; */
 }
 
 .image-controls .container {
