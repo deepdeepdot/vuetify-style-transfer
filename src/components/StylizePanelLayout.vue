@@ -153,7 +153,6 @@ const StylizePanelLayout = {
       const styleImgB = this.$refs['styleImgB'];
 
       if (styleImgB) {
-        console.log(styleImgA.slider + '/' + styleImgB.slider);
         // check against half of window.innerWidth
         // And/or the sum of both (up to some min: 350px)
 

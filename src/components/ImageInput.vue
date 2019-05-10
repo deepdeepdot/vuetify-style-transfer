@@ -20,20 +20,32 @@
             <v-card flat>
               <v-container style="max-width:500px">
                 <v-layout row wrap>
+
                   <v-flex xs12 md12>
-                    <v-checkbox v-if="showSquare"
-                      v-model="checkbox"
-                      :label="`Force image to square: ${checkbox.toString()}`"
-                      @change="updateImageSize()"
-                    ></v-checkbox>
-                  </v-flex>
-                  <v-flex xs12 md12>
-                    <v-slider
-                        v-model='slider'
-                        :label='sliderLabel'
-                        min=100
-                        max=500
-                    ></v-slider>
+
+                    <v-layout>
+                      <v-flex>
+                      <v-slider
+                          v-model='slider'
+                          :label='sliderLabel'
+                          min=100
+                          max=500
+                      ></v-slider>
+                      </v-flex>
+
+                      <v-flex xs1 v-if="showSquare">
+                        <v-tooltip bottom >
+                          <template v-slot:activator="{ on }">
+                            <v-checkbox v-on="on"
+                              v-model="checkbox"
+                              @change="updateImageSize()"
+                            ></v-checkbox>
+                          </template>
+                          <span>Force image to square</span>
+                        </v-tooltip>
+                      </v-flex>
+                    </v-layout>
+
                   </v-flex>
                   <v-flex xs12 md12>
                     <v-select
