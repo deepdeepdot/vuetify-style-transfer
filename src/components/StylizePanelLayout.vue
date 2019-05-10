@@ -80,6 +80,7 @@
         >
       </v-layout>
     </v-container>
+    <div class="filler"></div>
   </v-card>
 </template>
 
@@ -100,6 +101,7 @@ function loadImageFromFile(image, fileSelect) {
     let f = evt.target.files[0];
     let fileReader = new FileReader();
     fileReader.onload = e => {
+      image.crossOrigin = "Anonymous";
       image.src = e.target.result;
     };
     fileReader.readAsDataURL(f);
@@ -226,5 +228,9 @@ export default StylizePanelLayout;
 <style>
 canvas {
   outline: 10px lime solid;
+}
+.filler {
+  display: block;
+  height: 50px important!;
 }
 </style>

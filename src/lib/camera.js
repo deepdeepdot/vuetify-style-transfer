@@ -46,5 +46,6 @@ function capture(video, image) {
     let ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     let imageDataURL = canvas.toDataURL('image/png');
+    image.crossOrigin = "Anonymous";
     image.src = imageDataURL;
 }

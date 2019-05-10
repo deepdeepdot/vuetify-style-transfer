@@ -1,14 +1,15 @@
 <template>
   <v-card flat>
+    <div class="filler"></div>
     <v-layout row wrap>
       <v-flex d-flex xs12>
         <v-layout row justify-center>
           <v-flex xs12>
             <v-layout row justify-center>
-                <img ref='image'
-                     :src='imgUrl'
-                     crossorigin='anonymous'
-                >
+              <img ref='image'
+                    :src='imgUrl'
+                    crossorigin='anonymous'
+              >
             </v-layout>
           </v-flex>
         </v-layout>
@@ -17,11 +18,11 @@
       <v-flex d-flex xs12>
         <v-layout row justify-center>
           <v-flex xs12>
-            <v-card flat>
-              <v-container style="max-width:500px">
+            <v-card flat class="image-controls">
+              <v-container>
                 <v-layout row wrap>
 
-                  <v-flex xs12 md12>
+                  <v-flex xs12>
 
                     <v-layout>
                       <v-flex>
@@ -47,7 +48,7 @@
                     </v-layout>
 
                   </v-flex>
-                  <v-flex xs12 md12>
+                  <v-flex xs12>
                     <v-select
                         v-model="selected"
                         @change='setSelectedImage($event)'
@@ -120,14 +121,44 @@ export default {
       }
     },
     setSelectedImage(event) {
-        this.$emit('imageSelected', event);
+      this.$emit('imageSelected', event);
+
+      if (this.selected == 'Random image from wikiart.org') {
         // https://stackoverflow.com/questions/48869649/clearing-select-field-automatically-after-selecting-item
         this.$nextTick(() => {
             this.selected = null;
         });
+      }
     }
   }
 };
 
 </script>
 
+<style>
+
+.filler {
+  display: block;
+  height: 30px !important;
+  /* background-color: pink; */
+}
+
+.image-controls .container {
+  max-width: 500px;
+}
+
+.image-controls .container,
+.image-controls .container .layout,
+.image-controls .container .layout .flex,
+.image-controls .container .layout .flex > div {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.image-controls .container .layout .flex > div {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+
+</style>
