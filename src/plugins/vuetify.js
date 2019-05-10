@@ -3,6 +3,9 @@ import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
 
 Vue.use(Vuetify, {
+  options: {
+    customProperties: true // to allow CSS variables for theme colors
+  },
   theme: {
     primary: '#e91e63',
     secondary: '#673ab7',

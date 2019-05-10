@@ -23,7 +23,7 @@
               <v-container>
                 <v-layout row wrap>
                   <v-flex xs12 md12>
-                    <v-checkbox
+                    <v-checkbox v-if="showSquare"
                       v-model="checkbox"
                       :label="`Force image to square: ${checkbox.toString()}`"
                       @change="updateImageSize()"
@@ -66,7 +66,7 @@ function idToLabel(id) {
 }
 
 export default {
-  props: ['sliderLabel', 'imgUrl', 'options'],
+  props: ['sliderLabel', 'imgUrl', 'options', 'showSquare'],
   data: () => ({
     slider: 400,
     selected: null,

@@ -9,6 +9,7 @@
             imgUrl="https://cdn.vuetifyjs.com/images/cards/road.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 0)"
+            :showSquare="twoStyles"
           />
         </v-flex>
 
@@ -19,6 +20,7 @@
             imgUrl="https://cdn.vuetifyjs.com/images/cards/house.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 1)"
+            :showSquare="twoStyles"
           />
         </v-flex>
 
@@ -32,6 +34,7 @@
                   imgUrl="https://cdn.vuetifyjs.com/images/cards/plane.jpg"
                   :options="contentOptions"
                   @imageSelected="updateImageSource($event, 2)"
+                  :showSquare="twoStyles"
                 />
               </v-card>
             </v-flex>
@@ -105,6 +108,9 @@ export default {
     ImageInput,
     StylizeControl,
     CameraModal
+  },
+  props: {
+    twoStyles: Boolean
   },
   data: function() {
     return {

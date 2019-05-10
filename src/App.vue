@@ -11,21 +11,25 @@
     </v-toolbar>
 
     <v-content>
-      <StylizePanelLayout/>
+      <Tabs/>
     </v-content>
   </v-app>
 </template>
 
 <script>
 import StylizePanelLayout from "./components/StylizePanelLayout";
-
+import Cards from "./test/Cards";
 import GridLayout from "./test/GridLayout";
+// import CameraModal from "./components/CameraModal";
+import Tabs from "./components/Tabs";
 
 export default {
   name: "App",
   components: {
     StylizePanelLayout,
     GridLayout,
+    Cards,
+    Tabs,
   },
   data: function() {
     return {};
