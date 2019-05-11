@@ -14,7 +14,7 @@
       <v-layout row>
         <v-flex grow>
           <v-card dark>
-            <v-btn color="pink" block @click="styleAction">{{ buttonLabel }}</v-btn>
+            <v-btn color="pink" block @click="styleAction">{{ buttonLabelValue }}</v-btn>
           </v-card>
         </v-flex>
         <v-flex shrink>
@@ -46,12 +46,18 @@ export default {
   props: ["sliderLabel", "buttonLabel"],
   data: function() {
     return {
+      newButtonLabel: null,
       slider: 80,
       style: "[Fast] Distilled MobileNet style model (9.6MB)",
       transform: "[Fast] Separable_conv2d transformer (2.4MB)",
       styleOptions: ["[Fast] Distilled MobileNet style model (9.6MB)", "[High quality] Original Inceptionv3 style model (36.3MB)"],
       transformOptions: ["[Fast] Separable_conv2d transformer (2.4MB)", "[High quality] Original transformer model (7.9MB)"],
     };
+  },
+  computed: {
+    buttonLabelValue: function() {
+      return this.newButtonLabel || this.buttonLabel;
+    }
   },
   methods: {
     styleAction: function() {

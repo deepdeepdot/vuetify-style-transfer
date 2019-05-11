@@ -58,7 +58,7 @@
               <v-card color>
                 <StylizeControl
                   ref="styleControl"
-                  buttonLabel="Combine Styles"
+                  :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
                   sliderLabel="Stylization Ratio"
                   @styleAction="transferStyle()"
                   @loadStyle="loadStyle($event)"
@@ -104,7 +104,7 @@ function loadImageFromFile(image, fileSelect) {
     let f = evt.target.files[0];
     let fileReader = new FileReader();
     fileReader.onload = e => {
-      image.crossOrigin = "Anonymous";
+      image.crossOrigin = "anonymous";
       image.src = e.target.result;
     };
     fileReader.readAsDataURL(f);
@@ -196,27 +196,43 @@ const StylizePanelLayout = {
       }
     },
     transferStyle: function() {
-      let styleImgA = this.$refs.styleImgA.$refs['image'],
-          contentImg = this.$refs.contentImg.$refs['image'],
-          slider = this.$refs.styleControl.$refs['slider'],
-          styleRatio = slider.value ? slider.value / 100 : 1;
+      let refs = this.$refs,
+          styleImgA = refs.styleImgA.$refs['image'],
+          contentImg = refs.contentImg.$refs['image'],
+          slider = refs.styleControl.$refs['slider'],
+          styleRatio = slider.value ? slider.value / 100 : 1,
+          params;
 
-      let params = {
-        contentImg,
-        styleImg: styleImgA,
-        styleRatio,
-        reportStatus: msg => console.log(msg),
-        destination: this.$refs.canvas
-      };
+      let reportStatus = function(msg) {
+        refs.styleControl.newButtonLabel = msg;
+      }
 
-      if (this.twoStyles) {
-        alert('not implemented');
-        let styleImgB = this.$refs.styleImgB.$refs['image'];
-        // params = { ...params};
-        // startCombining({ combContentImg, combStyleImg1, combStyleImg2, combStyleRatio, destination, reportStatus }) {
-        // styleTransfer.startCombining(params);
-      } else{
-        styleTransfer.startStyling(params);
+      const useSingleStyle = !this.twoStyles;
+      if (useSingleStyle) {
+        params = {
+          contentImg,
+          styleImg: styleImgA,
+          styleRatio,
+          destination: refs.canvas,
+          reportStatus,
+        };
+        styleTransfer.startStyling(params).then(() => {
+          reportStatus('Stylize');
+        });
+      }
+      else {
+        let styleImgB = refs.styleImgB.$refs['image'];
+        params = {
+          combContentImg: contentImg,
+          combStyleImg1: styleImgA,
+          combStyleImg2: styleImgB,
+          combStyleRatio: styleRatio,
+          destination: refs.canvas,
+          reportStatus,
+        };
+        styleTransfer.startCombining(params).then(() => {
+          reportStatus('Combine Styles');
+        });
       }
     },
     loadStyle: function(name) {
