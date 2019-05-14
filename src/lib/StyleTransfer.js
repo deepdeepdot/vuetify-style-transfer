@@ -4,6 +4,7 @@
  */
 
 import * as tf from '@tensorflow/tfjs';
+import config from '../config';
 
 // Need to double-check if this still holds, not much difference at first
 tf.ENV.set('WEBGL_PACK', false);  // This needs to be done otherwise things run very slow v1.0.4
@@ -26,82 +27,114 @@ let styleNet = null;
 let transformNet = null;
 let nets = {};
 
-async function loadModel(type) {
+let domain = config['model_domain_url'];
+
+async function loadModel(type, options) {
   if (!nets[type]) {
-    nets[type] = await tf.loadGraphModel(model[type]);
+    const url = domain + '/' + model[type];
+    nets[type] = await tf.loadGraphModel(url, options);
   }
   return nets[type];
 }
 
+const fetchFunc = window.fetch.bind(window);
+
 export default class StyleTransfer {
+    constructor() {
+      this.loadOptions = {};
+    }
+
+    setLoadOptions(options) {
+      this.loadOptions = options;
+    }
 
     loadMobileNetStyleModel() {
-        const modelLoad = loadModel('MOBILE_STYLE_NET');
-        modelLoad.then(function(result) {
-            styleNet = result;
-            return result;
-        });
-        return modelLoad;
+      const modelLoad = loadModel('MOBILE_STYLE_NET', {
+        onProgress: function(perc) {
+          console.log('loadMobileNetStyleModel ' + perc);
+        },
+        fetchFunc
+      });
+      modelLoad.then(function(result) {
+          styleNet = result;
+          return result;
+      });
+      return modelLoad;
     }
 
     loadInceptionStyleModel() {
-        const modelLoad = loadModel('INCEPTION_STYLE_NET');
-        modelLoad.then(function (result) {
-            styleNet = result;
-            return result
-        });
-        return modelLoad;
+      const modelLoad = loadModel('INCEPTION_STYLE_NET', {
+        onProgress: function (perc) {
+          console.log('loadInceptionStyleModel ' + perc);
+        },
+        fetchFunc
+      });
+      modelLoad.then(function (result) {
+          styleNet = result;
+          return result
+      });
+      return modelLoad;
     }
 
     loadOriginalTransformerModel() {
-        const modelLoad = loadModel('ORIGINAL_TRANSFORM_NET');
-        modelLoad.then(function (result) {
-            transformNet = result;
-            return result
-        });
-        return modelLoad;
+      const modelLoad = loadModel('ORIGINAL_TRANSFORM_NET', {
+        onProgress: function (perc) {
+          console.log('loadOriginalTransformerModel ' + perc);
+        },
+        fetchFunc
+      });
+      modelLoad.then(function (result) {
+          transformNet = result;
+          return result
+      });
+      return modelLoad;
     }
 
     loadSeparableTransformerModel() {
-        const modelLoad = loadModel('SEPARABLE_TRANSFORM_NET');
-        modelLoad.then(function (result) {
-            transformNet = result;
-            return result
-        });
-        return modelLoad;
+      const modelLoad = loadModel('SEPARABLE_TRANSFORM_NET', {
+        onProgress: function (perc) {
+          console.log('loadSeparableTransformerModel ' + perc);
+        },
+        fetchFunc
+      });
+      modelLoad.then(function (result) {
+          transformNet = result;
+          return result
+      });
+      return modelLoad;
     }
 
     async startStyling({ contentImg, styleImg, styleRatio, destination, reportStatus }) {
-        await tf.nextFrame();
-        reportStatus('Generating 100D style representation');
+      await tf.nextFrame();
+      reportStatus('Generating 100D style representation');
 
-        await tf.nextFrame();
-        let bottleneck = await tf.tidy(() => {
-            return styleNet.predict(imgToTensor(styleImg));
-        });
-        if (styleRatio !== 1.0) {
-            reportStatus('Generating 100D identity style representation');
-            await tf.nextFrame();
-            const identityBottleneck = await tf.tidy(() => {
-                return styleNet.predict(imgToTensor(contentImg));
-            });
-            const styleBottleneck = bottleneck;
-            bottleneck = await tf.tidy(() => {
-                const styleBottleneckScaled = styleBottleneck.mul(tf.scalar(styleRatio));
-                const identityBottleneckScaled = identityBottleneck.mul(tf.scalar(1.0 - styleRatio));
-                return styleBottleneckScaled.addStrict(identityBottleneckScaled);
-            });
-            styleBottleneck.dispose();
-            identityBottleneck.dispose();
-        }
-        reportStatus('Stylizing image...');
-        await tf.nextFrame();
-        const stylized = await tf.tidy(() => {
-            return transformNet.predict([imgToTensor(contentImg), bottleneck]).squeeze();
-        });
-        await tf.browser.toPixels(stylized, destination);
-        bottleneck.dispose();  // Might wanna keep this around
-        stylized.dispose();
+      await tf.nextFrame();
+      let bottleneck = await tf.tidy(() => {
+          return styleNet.predict(imgToTensor(styleImg));
+      });
+      if (styleRatio !== 1.0) {
+          reportStatus('Generating 100D identity style representation');
+          await tf.nextFrame();
+          const identityBottleneck = await tf.tidy(() => {
+              return styleNet.predict(imgToTensor(contentImg));
+          });
+          const styleBottleneck = bottleneck;
+          bottleneck = await tf.tidy(() => {
+              const styleBottleneckScaled = styleBottleneck.mul(tf.scalar(styleRatio));
+              const identityBottleneckScaled = identityBottleneck.mul(tf.scalar(1.0 - styleRatio));
+              return styleBottleneckScaled.addStrict(identityBottleneckScaled);
+          });
+          styleBottleneck.dispose();
+          identityBottleneck.dispose();
+      }
+      reportStatus('Stylizing image...');
+      await tf.nextFrame();
+      const stylized = await tf.tidy(() => {
+          return transformNet.predict([imgToTensor(contentImg), bottleneck]).squeeze();
+      });
+      await tf.browser.toPixels(stylized, destination);
+      bottleneck.dispose();  // Might wanna keep this around
+      stylized.dispose();
     }
 
     async startCombining({ combContentImg, combStyleImg1, combStyleImg2, combStyleRatio, destination, reportStatus }) {
