@@ -1,5 +1,6 @@
 {
-    "model_domain_url": "",
-    "model_domain_url_full": "//localhost:8081",
-    "model_domain_url_external": "https://style-transfer-models.surge.sh"
+    "model_domain_url_local": "",
+    "model_domain_url_local_full": "//localhost:8081",
+    "model_domain_url_external": "https://style-transfer-models.surge.sh",
+    "model_domain_url": ""
 }

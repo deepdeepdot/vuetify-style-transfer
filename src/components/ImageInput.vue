@@ -152,10 +152,13 @@ export default {
   max-width: 500px;
 }
 
+/*
 .image-controls .container,
 .image-controls .container .layout,
+*/
 .image-controls .container .layout .flex,
-.image-controls .container .layout .flex > div {
+.image-controls .container .layout .flex > div
+{
   padding-top: 0;
   padding-bottom: 0;
 }

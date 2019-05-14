@@ -6,7 +6,7 @@
           <ImageInput
             ref="styleImgA"
             sliderLabel="Style image A size"
-            imgUrl="http://cdn.vuetifyjs.com/images/cards/road.jpg"
+            imgUrl="/images/stripes.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 0)"
             @imageSizeChanged="imageSizeChanged($event, 0)"
@@ -19,7 +19,7 @@
           <ImageInput
             ref="styleImgB"
             sliderLabel="Style image B size"
-            imgUrl="http://cdn.vuetifyjs.com/images/cards/house.jpg"
+            imgUrl="//cdn.vuetifyjs.com/images/cards/house.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 1)"
             @imageSizeChanged="imageSizeChanged($event, 1)"
@@ -35,7 +35,7 @@
                 <ImageInput
                   ref="contentImg"
                   sliderLabel="Content image size"
-                  imgUrl="http://cdn.vuetifyjs.com/images/cards/plane.jpg"
+                  imgUrl="//cdn.vuetifyjs.com/images/cards/plane.jpg"
                   :options="contentOptions"
                   @imageSelected="updateImageSource($event, 2)"
                   :showSquare="twoStyles"
@@ -94,6 +94,11 @@ import CameraModal from './CameraModal';
 
 import StyleTransfer from '../lib/StyleTransfer';
 import links from './links';
+
+// ImageResizer
+
+// ResizedImageStyleTransfer
+// All images that goes through this API will be resized up to some max width/max height
 
 let styleTransfer = new StyleTransfer();
 styleTransfer.loadMobileNetStyleModel();
@@ -179,7 +184,7 @@ const StylizePanelLayout = {
 
       switch (selected) {
         case 'Take a picture':
-          this.$refs['modal-camera'].captureImage(image);
+          this.$refs['modal-camera'].openCameraModal(image);
           break;
         case 'Select from file':
           fileSelect = this.$refs['fileSelect'];
@@ -217,6 +222,7 @@ const StylizePanelLayout = {
           reportStatus,
         };
         styleTransfer.startStyling(params).then(() => {
+          // Restore original label for the button
           reportStatus('Stylize');
         });
       }
@@ -231,6 +237,7 @@ const StylizePanelLayout = {
           reportStatus,
         };
         styleTransfer.startCombining(params).then(() => {
+          // Restore original label for the button
           reportStatus('Combine Styles');
         });
       }

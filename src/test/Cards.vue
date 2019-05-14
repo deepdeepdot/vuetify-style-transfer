@@ -5,7 +5,7 @@
     <v-flex xs12 sm6 offset-sm3>
       <v-card>
         <v-img
-          src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
+          src="//cdn.vuetifyjs.com/images/cards/desert.jpg"
           aspect-ratio="2.75"
         ></v-img>
 
@@ -67,7 +67,7 @@
               <v-layout>
                 <v-flex xs5>
                   <v-img
-                    src="https://cdn.vuetifyjs.com/images/cards/foster.jpg"
+                    src="//cdn.vuetifyjs.com/images/cards/foster.jpg"
                     height="125px"
                     contain
                   ></v-img>
@@ -109,7 +109,7 @@
                 </v-flex>
                 <v-flex xs5>
                   <v-img
-                    src="https://cdn.vuetifyjs.com/images/cards/halcyon.png"
+                    src="//cdn.vuetifyjs.com/images/cards/halcyon.png"
                     height="125px"
                     contain
                   ></v-img>
@@ -198,7 +198,7 @@
     <v-flex xs12 sm6 offset-sm3>
       <v-card>
         <v-img
-          src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+          src="//cdn.vuetifyjs.com/images/cards/sunshine.jpg"
           height="200px"
         >
         </v-img>
@@ -254,7 +254,7 @@
         <v-list-tile-avatar color="grey darken-3">
           <v-img
             class="elevation-6"
-            src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+            src="//avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
           ></v-img>
         </v-list-tile-avatar>
 
@@ -288,9 +288,9 @@
         show: false,
         card_text: 'Lorem ipsum dolor sit amet, brute iriure accusata ne mea. Eos suavitate referrentur ad, te duo agam libris qualisque, utroque quaestio accommodare no qui. Et percipit laboramus usu, no invidunt verterem nominati mel. Dolorem ancillae an mei, ut putant invenire splendide mel, ea nec propriae adipisci. Ignota salutandi accusamus in sed, et per malis fuisset, qui id ludus appareat.',
         cards: [
-            { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
-            { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
-            { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 }
+            { title: 'Pre-fab homes', src: '//cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
+            { title: 'Favorite road trips', src: '//cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
+            { title: 'Best airlines', src: '//cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 }
         ]
       }
     }

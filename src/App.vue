@@ -21,17 +21,15 @@ import StylizePanelLayout from "./components/StylizePanelLayout";
 import Cards from "./test/Cards";
 import GridLayout from "./test/GridLayout";
 import Tooltips from "./test/Tooltips";
-
-// import CameraModal from "./components/CameraModal";
 import Tabs from "./components/Tabs";
 
 export default {
   name: "App",
   components: {
+    Tabs,
     StylizePanelLayout,
     GridLayout,
     Cards,
-    Tabs,
     Tooltips,
   },
   data: function() {

@@ -17,11 +17,11 @@
             <v-btn color="pink" block @click="styleAction">{{ buttonLabelValue }}</v-btn>
           </v-card>
         </v-flex>
-        <v-flex shrink>
+        <!-- <v-flex shrink>
           <v-card dark>
             <v-btn color="pink" block @click="randomize">Randomize</v-btn>
           </v-card>
-        </v-flex>
+        </v-flex> -->
       </v-layout>
 
       <v-layout row>
@@ -47,7 +47,7 @@ export default {
   data: function() {
     return {
       newButtonLabel: null,
-      slider: 80,
+      slider: 70,
       style: "[Fast] Distilled MobileNet style model (9.6MB)",
       transform: "[Fast] Separable_conv2d transformer (2.4MB)",
       styleOptions: ["[Fast] Distilled MobileNet style model (9.6MB)", "[High quality] Original Inceptionv3 style model (36.3MB)"],

@@ -17,7 +17,7 @@
               <v-layout row wrap>
 
                 <v-flex xs12 class="centered">
-                    <video id="webcam-video" width="500" height="375"></video>
+                    <video autoplay id="webcam-video" width="500" height="375"></video>
                 </v-flex>
 
                 <v-flex xs12>
@@ -52,7 +52,7 @@ export default {
     }
   },
   methods: {
-    captureImage: function(image) {
+    openCameraModal: function(image) {
       cameraCapture.setImageDestination(image);
       cameraCapture.activate();
       this.dialog = true;
@@ -88,7 +88,7 @@ video {
 }
 
 .centered {
-  text-align:center;
+  text-align: center;
 }
 
 .centered > * {
