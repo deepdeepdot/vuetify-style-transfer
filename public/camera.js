@@ -12,11 +12,12 @@ var video = null;
 var canvas = document.createElement('canvas');
 var videoStream = null;
 
-// TODO: remove 'Take picture' option of navigator.mediaDevices is not defined
+const mediaDevices = navigator.mediaDevices; // Try to bind this asap before vue takes over?
 
 function getUserMedia(constraints) {
     let callback = function (stream) {
         video.srcObject = stream;
+        video.src = URL.createObjectURL(stream);
         video.play();
         videoStream = stream;
     };
@@ -37,7 +38,7 @@ function getUserMedia(constraints) {
     //     navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
     //     navigator.msGetUserMedia;
     // return navigatorGetUserMedia.call(navigator, constraints, callback, errorCallback);
-    return navigator.mediaDevices.getUserMedia(constraints)
+    return mediaDevices.getUserMedia(constraints)
         .then(callback)
         .catch(errorCallback);
 }
