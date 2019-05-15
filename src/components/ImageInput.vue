@@ -8,7 +8,6 @@
             <v-layout row justify-center>
               <img ref='image'
                     :src='imgUrl'
-                    crossorigin='anonymous'
               >
             </v-layout>
           </v-flex>

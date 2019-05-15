@@ -19,7 +19,7 @@
           <ImageInput
             ref="styleImgB"
             sliderLabel="Style image B size"
-            imgUrl="//cdn.vuetifyjs.com/images/cards/house.jpg"
+            imgUrl="/images/clouds.jpg"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 1)"
             @imageSizeChanged="imageSizeChanged($event, 1)"
@@ -35,7 +35,7 @@
                 <ImageInput
                   ref="contentImg"
                   sliderLabel="Content image size"
-                  imgUrl="//cdn.vuetifyjs.com/images/cards/plane.jpg"
+                  imgUrl="/images/chicago.jpg"
                   :options="contentOptions"
                   @imageSelected="updateImageSource($event, 2)"
                   :showSquare="twoStyles"
@@ -74,13 +74,19 @@
             <CameraModal ref="modal-camera"/>
           </v-layout>
         </v-flex>
-
         <input
           type="file"
-          ref="fileSelect"
-          style="display: none"
+          ref="select-file"
           accept="image/x-png, image/gif, image/jpeg"
-        >
+          style="display: none"
+        />
+        <input
+          type="file"
+          ref="shoot-photo"
+          accept="image/*"
+          capture="camera"
+          style="display:none"
+        />
       </v-layout>
     </v-container>
     <div class="filler"></div>
@@ -99,21 +105,46 @@ import links from './links';
 
 // ResizedImageStyleTransfer
 // All images that goes through this API will be resized up to some max width/max height
+const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
 let styleTransfer = new StyleTransfer();
 styleTransfer.loadMobileNetStyleModel();
 styleTransfer.loadOriginalTransformerModel();
 
-function loadImageFromFile(image, fileSelect) {
-  fileSelect.onchange = evt => {
-    let f = evt.target.files[0];
-    let fileReader = new FileReader();
-    fileReader.onload = e => {
-      image.crossOrigin = "anonymous";
-      image.src = e.target.result;
+function resizeImageToDestination(source, {width, height, destination}) {
+  let ratio = source.width / source.height;
+  // alert(ratio + "/" + source.width + "/" + source.height);
+
+  // Compute width and height
+  width = width || height && height * ratio || source.width;
+  height = height || width && width / ratio || source.height;
+  // alert('width:' + width + ", height:" + height);
+
+  let resizedCanvas = document.createElement('canvas');
+  resizedCanvas.width = width;
+  resizedCanvas.height = height;
+
+  let ctx = resizedCanvas.getContext('2d');
+  ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, width, height);
+  destination.src = resizedCanvas.toDataURL();
+}
+
+function loadImageFromFile(file, image, resize) {
+    const fileReader = new FileReader();
+    fileReader.onload = function (e) {
+        const largeImage = new Image();
+        largeImage.src = e.target.result;
+        largeImage.onload = function() {
+          resizeImageToDestination(largeImage, {...resize, destination:image});
+        };
     };
-    fileReader.readAsDataURL(f);
-    fileSelect.value = '';
+    fileReader.readAsDataURL(file);
+}
+
+function loadImageFromFileSelect(image, fileSelect, resize) {
+  fileSelect.onchange = evt => {
+    let file = evt.target.files[0];
+    loadImageFromFile(file, image, resize);
   };
   fileSelect.click();
 }
@@ -162,7 +193,7 @@ const StylizePanelLayout = {
     };
   },
   methods: {
-    imageSizeChanged: function(size, idx) {
+    imageSizeChanged: function( /* unused: size, idx */) {
       const styleImgA = this.$refs['styleImgA'];
       const styleImgB = this.$refs['styleImgB'];
 
@@ -182,13 +213,24 @@ const StylizePanelLayout = {
           fileSelect,
           url;
 
+      image.crossOrigin = 'Anonymous'; // for tensorflow
+
       switch (selected) {
         case 'Take a picture':
-          this.$refs['modal-camera'].openCameraModal(image);
+          if (isMobile) {
+            let shootPhoto = this.$refs['shoot-photo'];
+            shootPhoto.onchange = function shootPhoto(evt) {
+              let file = evt.target.files[0];
+              loadImageFromFile(file, image, { width: 320 });
+            };
+            shootPhoto.click();
+          } else {
+            this.$refs['modal-camera'].openCameraModal(image);
+          }
           break;
         case 'Select from file':
-          fileSelect = this.$refs['fileSelect'];
-          loadImageFromFile(image, fileSelect);
+          fileSelect = this.$refs['select-file'];
+          loadImageFromFileSelect(image, fileSelect, isMobile? {width: 320}:null);
           break;
         case 'Random image from wikiart.org':
           randomNumber = Math.floor(Math.random() * links.length);

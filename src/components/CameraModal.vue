@@ -17,7 +17,7 @@
               <v-layout row wrap>
 
                 <v-flex xs12 class="centered">
-                    <video autoplay id="webcam-video" width="500" height="375"></video>
+                    <video id="webcam-video" width="500" height="375"></video>
                 </v-flex>
 
                 <v-flex xs12>

@@ -3,6 +3,7 @@
  * StyleTransfer
  */
 
+// const env = process.NODE_ENV == 'production' ? 'prod' : 'dev';
 import * as tf from '@tensorflow/tfjs';
 import config from '../config';
 
@@ -29,14 +30,33 @@ let nets = {};
 
 let domain = config['model_domain_url'];
 
+function reportMsg(msg) {
+  console.log(msg);
+}
+
 async function loadModel(type, options) {
   if (!nets[type]) {
     const url = domain + '/' + model[type];
-    nets[type] = await tf.loadGraphModel(url, options);
+
+    let numTrials = 3;
+    for (let i = 0; i < numTrials; i++) {
+      try {
+        nets[type] = await tf.loadGraphModel(url, options);
+        console.log('Loaded... ' + type);
+        break;
+      } catch (error) {
+        alert("loading model error: " + error);
+        console.log("loading model error: ", error);
+        if (i === numTrials) {
+          alert('Sorry, we could not load the models, retry the app later');
+        }
+      }
+    }
   }
   return nets[type];
 }
 
+// To make it work with the upgrade to Tensorflow.js 1.1.2 (otherwise, stuck with TF 1.0)
 const fetchFunc = window.fetch.bind(window);
 
 export default class StyleTransfer {
@@ -51,7 +71,7 @@ export default class StyleTransfer {
     loadMobileNetStyleModel() {
       const modelLoad = loadModel('MOBILE_STYLE_NET', {
         onProgress: function(perc) {
-          console.log('loadMobileNetStyleModel ' + perc);
+          reportMsg('loadMobileNetStyleModel ' + perc);
         },
         fetchFunc
       });
@@ -65,7 +85,7 @@ export default class StyleTransfer {
     loadInceptionStyleModel() {
       const modelLoad = loadModel('INCEPTION_STYLE_NET', {
         onProgress: function (perc) {
-          console.log('loadInceptionStyleModel ' + perc);
+          reportMsg('loadInceptionStyleModel ' + perc);
         },
         fetchFunc
       });
@@ -79,7 +99,7 @@ export default class StyleTransfer {
     loadOriginalTransformerModel() {
       const modelLoad = loadModel('ORIGINAL_TRANSFORM_NET', {
         onProgress: function (perc) {
-          console.log('loadOriginalTransformerModel ' + perc);
+          reportMsg('loadOriginalTransformerModel ' + perc);
         },
         fetchFunc
       });
@@ -93,7 +113,7 @@ export default class StyleTransfer {
     loadSeparableTransformerModel() {
       const modelLoad = loadModel('SEPARABLE_TRANSFORM_NET', {
         onProgress: function (perc) {
-          console.log('loadSeparableTransformerModel ' + perc);
+          reportMsg('loadSeparableTransformerModel ' + perc);
         },
         fetchFunc
       });
@@ -205,7 +225,7 @@ export default class StyleTransfer {
         dummyOut.print();
       });
     });
-    console.log(profile);
+    reportMsg(profile);
     const time = await tf.time(() => {
       tf.tidy(() => {
         for (let i = 0; i < 10; i++) {
@@ -214,7 +234,7 @@ export default class StyleTransfer {
         }
       })
     });
-    console.log(time);
+    reportMsg(time);
   }
 
   async benchmarkTransform(x, bottleneck, transformNet) {
@@ -224,7 +244,7 @@ export default class StyleTransfer {
         dummyOut.print();
       });
     });
-    console.log(profile);
+    reportMsg(profile);
     const time = await tf.time(() => {
       tf.tidy(() => {
         for (let i = 0; i < 10; i++) {
@@ -233,6 +253,6 @@ export default class StyleTransfer {
         }
       })
     });
-    console.log(time);
+    reportMsg(time);
   }
 */
