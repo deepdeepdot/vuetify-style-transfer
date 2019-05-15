@@ -101,10 +101,6 @@ import CameraModal from './CameraModal';
 import StyleTransfer from '../lib/StyleTransfer';
 import links from './links';
 
-// ImageResizer
-
-// ResizedImageStyleTransfer
-// All images that goes through this API will be resized up to some max width/max height
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
 let styleTransfer = new StyleTransfer();
@@ -250,7 +246,7 @@ const StylizePanelLayout = {
           styleRatio = slider.value ? slider.value / 100 : 1,
           params;
 
-      let reportStatus = function(msg) {
+      let reportStatus = function(msg, /* options: disableControl so no functionality !? */) {
         refs.styleControl.newButtonLabel = msg;
       }
 
@@ -285,17 +281,25 @@ const StylizePanelLayout = {
       }
     },
     loadStyle: function(name) {
-      if (name == 'MOBILE_STYLE_NET') {
-        styleTransfer.loadMobileNetStyleModel();
-      } else {
-        styleTransfer.loadInceptionStyleModel();
+      try {
+        if (name == 'MOBILE_STYLE_NET') {
+          styleTransfer.loadMobileNetStyleModel();
+        } else {
+          styleTransfer.loadInceptionStyleModel();
+        }
+      } catch (error) {
+        reportStatus(error, {disableControl: true});
       }
     },
     loadTransform: function(name) {
-      if (name == 'ORIGINAL_TRANSFORM_NET') {
-        styleTransfer.loadOriginalTransformerModel();
-      } else {
-        styleTransfer.loadSeparableTransformerModel();
+      try {
+        if (name == 'ORIGINAL_TRANSFORM_NET') {
+          styleTransfer.loadOriginalTransformerModel();
+        } else {
+          styleTransfer.loadSeparableTransformerModel();
+        }
+      } catch (error) {
+        reportStatus(error, {disableControl: true});
       }
     }
   }
