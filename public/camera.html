@@ -1,27 +1,17 @@
-<html>
-    <link rel="stylesheet" href="camera.css" type="text/css" media="all">
-    <style>
-        video {
-            border: 5px solid pink;
-        }
-    </style>
-    <script src="capture.js">
-    </script>
+<div>
+    <div class="camera">
+        <video id="webcam-video" class="centered" width="500" height="375"></video>
+        <button id="startButton">Start</button>
+        <button id="pictureButton">Take photo</button>
+        <button id="stopButton">Stop</button>
+    </div>
 
-<div class="camera">
-    <video id="webcam-video" class="centered" width="500" height="375"></video>
-    <button id="startbutton">Take photo</button>
+    <canvas id="canvas">
+    </canvas>
+
+    <div class="output">
+        <img id="photo" alt="The screen capture will appear in this box.">
+    </div>
 </div>
 
-<canvas id="canvas">
-</canvas>
-
-<div class="output">
-    <img id="photo" alt="The screen capture will appear in this box.">
-</div>
-
-<script>
-</script>
-
-</html>
-
+<script src="capture.js"></script>

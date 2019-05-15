@@ -1,0 +1,75 @@
+<p>Working great for mobiles like OnePlus (FF and Chrome)</p>
+<p>Also working for iphone6 *once* (safari/chrome), then out of memory and reload page</p>
+
+<input id="photo-shoot" type="file" accept="image/*" capture="camera">
+</input>
+
+<input id="photo-select" type="file" accept="image/*">
+</input>
+
+<hr>
+<img id="destination" />
+
+<script>
+    // For older Safari's do not use newer ES6 syntax: fat arrows!!
+
+    // <h1>This is working great for oneplus, mosty on iphone6, the first time, then... page reloaded due to memory issue?</h1>
+    // Issue remains for both: Safari (reload) and Chrome (crash)
+    // No real solution
+
+    function restyleSize(img, { width, height, reset }) {
+        if (width && height) {
+            img.style.setProperty('height', height + 'px');
+            img.style.setProperty('width', width + 'px');
+        }
+        else if (height) {
+            img.style.setProperty('height', height + 'px');
+            img.style.removeProperty('width');
+        }
+        else if (width) {
+            img.style.setProperty('width', width + 'px');
+            img.style.removeProperty('height');
+        } else if (reset) {
+            img.style.removeProperty('width');
+            img.style.removeProperty('height');
+        }
+    }
+
+    function updateImage(file, img, resize) {
+        const fileReader = new FileReader();
+        fileReader.onload = function (e) {
+            img.crossorigin = 'anonymous'; // is this needed?
+            img.src = e.target.result;
+            restyleSize(img, resize);
+        };
+        fileReader.readAsDataURL(file);
+    }
+
+    const imageDestinationId = '#destination';
+    const img = document.querySelector(imageDestinationId);
+
+    const photoShootId = '#photo-shoot';
+    const photoShoot = document.querySelector(photoShootId); // .$refs['camera-shot'];
+
+    photoShoot.onchange = function shootPhoto(evt) {
+        const file = evt.target.files[0];
+        updateImage(file, img, { width: 320 });
+    };
+    // POC: we only one event handler, otherwise, we have two bindings
+    // var isiOS = (/iPhone|iPad/i.test(navigator.userAgent));
+    // if (isiOS) {
+    //     photoShoot.addEventListener('change', photoShoot.onchange, false);
+    // }
+    const photoSelectId = '#photo-select';
+    const photoSelect = document.querySelector(photoSelectId); // .$refs['camera-shot'];
+
+    photoSelect.onchange = function selectPhoto(evt) {
+        const file = evt.target.files[0];
+        var height = window.innerWidth / 2; // 320;
+        updateImage(file, img, { height });
+    };
+    // if (isiOS) {
+    //     photoSelect.addEventListener('change', photoSelect.onchange, false);
+    // }
+
+</script>
