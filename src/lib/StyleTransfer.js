@@ -43,11 +43,11 @@ async function loadModel(type, options) {
     for (let i = 0; i < numTrials; i++) {
       try {
         nets[type] = await tf.loadGraphModel(url, options);
-        console.log('Loaded... ' + type);
+        reportMsg('Loaded... ' + type);
         break;
       } catch (error) {
         alert("loading model error: " + error);
-        console.log("loading model error: ", error);
+        reportMsg("loading model error: ", error);
         if (i === numTrials) {
           alert('Sorry, we could not load the models, retry the app later');
         }

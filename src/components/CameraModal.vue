@@ -52,18 +52,22 @@ export default {
     }
   },
   methods: {
-    openCameraModal: function(image) {
+    openCameraModal: async function(image) {
       if (!cameraCapture) {
         let video = this.$refs['webcam-video'];
         cameraCapture = new CameraCapture(video);
       }
       cameraCapture.setImageDestination(image);
-      cameraCapture.activate();
+      try {
+        await cameraCapture.activate();
+      } catch (e) {
+        alert("An error occurred: " + e);
+      }
       this.dialog = true;
     },
     snap: async function() {
       if (!cameraCapture) return;
-      await cameraCapture.captureImageFromCamera();
+      cameraCapture.captureImageFromCamera();
       setTimeout(() => {
         this.dialog = false;
       }, 300);
