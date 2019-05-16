@@ -2,27 +2,31 @@
 // https://mdn-samples.mozilla.org/s/webrtc-capturestill/capture.js
 
 export default class CameraCapture {
-    constructor(videoId) {
-        this.videoId = videoId;
+    constructor(video) {
+        this.video = video;
         this.videoStream = null;
     }
 
     activate() {
-        let video = document.getElementById(this.videoId);
-
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            .then( (stream) => {
-                this.videoStream = stream;
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(function (err) {
-                console.log("An error occurred: " + err);
-            });
+        let setupStream = (stream) => {
+            this.videoStream = stream;
+            this.video.srcObject = stream;
+            this.video.play();
+        };
+        if (!this.videoStream) {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                .then(setupStream)
+                .catch(function (err) {
+                    console.log("An error occurred: " + err);
+                });
+        }
     }
 
     deactivate() {
-        this.videoStream.getTracks()[0].stop();
+        if (this.videoStream) {
+            this.videoStream.getTracks()[0].stop();
+            this.videoStream = null;
+        }
     }
 
     setImageDestination(image) {
@@ -30,8 +34,9 @@ export default class CameraCapture {
     }
 
     captureImageFromCamera() {
-        let video = document.getElementById(this.videoId);
-        capture(video, this.imageDestination);
+        if (this.videoStream) {
+            capture(this.video, this.imageDestination);
+        }
     }
 }
 

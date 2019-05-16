@@ -17,7 +17,7 @@
               <v-layout row wrap>
 
                 <v-flex xs12 class="centered">
-                    <video id="webcam-video" width="500" height="375"></video>
+                    <video ref="webcam-video" width="500" height="375"></video>
                 </v-flex>
 
                 <v-flex xs12>
@@ -43,7 +43,7 @@
 
 import CameraCapture from '../lib/camera';
 
-let cameraCapture = new CameraCapture('webcam-video');
+let cameraCapture; // singleton
 
 export default {
   data () {
@@ -53,11 +53,16 @@ export default {
   },
   methods: {
     openCameraModal: function(image) {
+      if (!cameraCapture) {
+        let video = this.$refs['webcam-video'];
+        cameraCapture = new CameraCapture(video);
+      }
       cameraCapture.setImageDestination(image);
       cameraCapture.activate();
       this.dialog = true;
     },
     snap: async function() {
+      if (!cameraCapture) return;
       await cameraCapture.captureImageFromCamera();
       setTimeout(() => {
         this.dialog = false;
@@ -66,6 +71,7 @@ export default {
   },
   watch: {
     dialog: function(show, oldValue) {
+      if (!cameraCapture) return;
       if (!show) {
         cameraCapture.deactivate();
       }
