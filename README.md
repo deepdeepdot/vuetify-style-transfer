@@ -1,4 +1,6 @@
-# style-transfer
+# vuetify-style-transfer
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/bf298076-ed4b-4365-be74-26a8061a3b44/deploy-status)](https://app.netlify.com/sites/style-transfer/deploys)
 
 ## Project setup
 ```
