@@ -41,7 +41,7 @@
 
 <script>
 
-import CameraCapture from '../lib/camera';
+import CameraCapture from '../lib/CameraCapture';
 
 let cameraCapture; // singleton
 

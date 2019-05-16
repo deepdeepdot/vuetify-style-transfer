@@ -48,10 +48,10 @@
 
                   <v-flex xs12>
                     <v-select
-                        v-model="selected"
-                        @change='setSelectedImage($event)'
-                        :items='getItemsForSelect'
-                        label='Select content'
+                      v-model="selected"
+                      @change='setSelectedImage($event)'
+                      :items='getItemsForSelect'
+                      label='Select content'
                     >
                     </v-select>
                   </v-flex>
@@ -92,12 +92,12 @@ export default {
     checkbox: false,
   }),
   computed: {
-      getItemsForSelect: function() {
-          return this.options.map((id) => ({
-              value: id,
-              text: idToLabel(id)
-          }));
-      }
+    getItemsForSelect: function() {
+      return this.options.map((id) => ({
+        value: id,
+        text: idToLabel(id)
+      }));
+    }
   },
   watch: {
     slider: function() {
@@ -119,8 +119,8 @@ export default {
       const img = this.$refs['image'];
       img.height = height;
       if (img.style.width) {
-        // If this branch is triggered, then that means the image was forced to a square using
-        // a fixed pixel value.
+        // If this branch is triggered, then that means the image
+        // was forced to a square using a fixed pixel value.
         img.style.width = img.height+'px';  // Fix width back to a square
       }
       if (square) {
@@ -165,11 +165,5 @@ export default {
   padding-top: 0;
   padding-bottom: 0;
 }
-
-.image-controls .container .layout .flex > div {
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
 
 </style>

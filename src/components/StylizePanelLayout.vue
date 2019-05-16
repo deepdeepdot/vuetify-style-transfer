@@ -288,7 +288,7 @@ const StylizePanelLayout = {
           styleTransfer.loadInceptionStyleModel();
         }
       } catch (error) {
-        this.$refs.styleControl.newButtonLabel = error;
+        this.$refs['styleControl'].newButtonLabel = error;
       }
     },
     loadTransform: function(name) {
@@ -299,7 +299,7 @@ const StylizePanelLayout = {
           styleTransfer.loadSeparableTransformerModel();
         }
       } catch (error) {
-        this.$refs.styleControl.newButtonLabel = error;
+        this.$refs['styleControl'].newButtonLabel = error;
       }
     }
   }
