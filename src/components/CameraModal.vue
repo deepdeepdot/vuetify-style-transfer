@@ -70,7 +70,7 @@ export default {
     }
   },
   watch: {
-    dialog: function(show, oldValue) {
+    dialog: function(show /*, oldValue */) {
       if (!cameraCapture) return;
       if (!show) {
         cameraCapture.deactivate();

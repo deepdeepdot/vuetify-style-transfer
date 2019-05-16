@@ -15,11 +15,7 @@ export default class CameraCapture {
         };
         if (!this.videoStream) {
             return navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-                .then(setupStream)
-                .catch(function (err) {
-                    console.log("An error occurred: " + err);
-                    throw err;
-                });
+                .then(setupStream);
         }
     }
 

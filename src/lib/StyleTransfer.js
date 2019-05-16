@@ -31,6 +31,7 @@ let nets = {};
 let domain = config['model_domain_url'];
 
 function reportMsg(msg) {
+  // eslint-disable-next-line no-console
   console.log(msg);
 }
 

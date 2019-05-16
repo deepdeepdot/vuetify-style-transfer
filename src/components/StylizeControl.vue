@@ -75,7 +75,7 @@ export default {
     },
     loadTransform: function(event) {
       let type = event.startsWith('[Fast]') ? 'ORIGINAL_TRANSFORM_NET': 'SEPARABLE_TRANSFORM_NET';
-      this.$emit('loadTransform', event);
+      this.$emit('loadTransform', type);
     }
   }
 };
