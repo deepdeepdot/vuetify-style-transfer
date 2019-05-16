@@ -22,8 +22,7 @@
                 <v-layout row wrap>
 
                   <v-flex xs12>
-
-                    <v-layout>
+                    <v-layout v-if="isDesktop()">
                       <v-flex>
                       <v-slider
                           v-model='slider'
@@ -45,8 +44,8 @@
                         </v-tooltip>
                       </v-flex>
                     </v-layout>
-
                   </v-flex>
+
                   <v-flex xs12>
                     <v-select
                         v-model="selected"
@@ -74,6 +73,8 @@ function idToLabel(id) {
     ).join(' ');
 }
 
+const isDesktop = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+
 export default {
   props: {
     sliderLabel: String,
@@ -86,7 +87,7 @@ export default {
     this.updateImageSize();
   },
   data: () => ({
-    slider: 300,
+    slider: 320,
     selected: null,
     checkbox: false,
   }),
@@ -104,6 +105,9 @@ export default {
     }
   },
   methods: {
+    isDesktop: function() {
+      return !isMobile;
+    },
     dragging: function() {
       this.$emit('imageSizeChanged', this.slider);
       this.updateImageSize();

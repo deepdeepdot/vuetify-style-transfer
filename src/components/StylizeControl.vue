@@ -43,7 +43,10 @@
 <script>
 export default {
   name: "StylizeControl",
-  props: ["sliderLabel", "buttonLabel"],
+  props: {
+    sliderLabel: String,
+    buttonLabel: String,
+  },
   data: function() {
     return {
       newButtonLabel: null,

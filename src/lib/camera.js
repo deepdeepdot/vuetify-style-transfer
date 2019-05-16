@@ -14,10 +14,11 @@ export default class CameraCapture {
             this.video.play();
         };
         if (!this.videoStream) {
-            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            return navigator.mediaDevices.getUserMedia({ video: true, audio: false })
                 .then(setupStream)
                 .catch(function (err) {
                     console.log("An error occurred: " + err);
+                    throw err;
                 });
         }
     }
