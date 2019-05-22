@@ -21,7 +21,7 @@ export default class CameraCapture {
 
     deactivate() {
         if (this.videoStream) {
-            this.videoStream.getTracks()[0].stop();
+            this.videoStream.getTracks().forEach(track => track.stop());
             this.videoStream = null;
         }
     }
