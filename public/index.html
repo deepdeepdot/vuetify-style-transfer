@@ -14,7 +14,8 @@
       <strong>We're sorry but style-transfer doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <script>
-      if (!window.location.protocol.startsWith('https')) {
+      const isLocalhost = window.location.hostname === 'localhost';
+      if (!isLocalhost && !window.location.protocol.startsWith('https')) {
         alert('Access to the camera [getUserMedia] requires https... redirecting to https');
         // https is required to get access to the camera
         window.location.protocol = 'https';
