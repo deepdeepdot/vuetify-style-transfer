@@ -62,10 +62,13 @@ export default {
     };
   },
   async mounted() {
-    if (!modelLoaded) {
+    if (modelLoaded) return;
+    try {
       await this.initializeModels();
       modelLoaded = true;
       this.$emit('modelLoaded');
+    } catch(e) {
+      this.reportStatus(e);
     }
   },
   computed: {
@@ -94,43 +97,45 @@ export default {
       this.$refs['modelSelectTransformer'].disable = true;
     },
     initializeModels() {
+      let { loadMobileNetStyleModel, loadSeparableTransformerModel } = this.styleTransfer;
       this.disableStylizeButtons();
-      try {
-        return Promise.all([
-          this.styleTransfer.loadMobileNetStyleModel(this.reportStatus),
-          this.styleTransfer.loadOriginalTransformerModel(this.reportStatus)
-        ]).then(() => {
-          this.enableStylizeButtons();
-        })
-      }
-      catch(e) {
-        this.reportStatus(e);
-      }
+      return Promise.all([
+        loadMobileNetStyleModel(this.reportStatus),
+        loadSeparableTransformerModel(this.reportStatus),
+      ]).then(() => {
+        this.enableStylizeButtons();
+      });
     },
-    async loadStyle(name) {
-      let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET';
+    async loadStyle(event) {
+      let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET',
+          { loadMobileNetStyleModel, loadInceptionStyleModel} = this.styleTransfer;
+      
       try {
         this.disableStylizeButtons();
         if (type == 'MOBILE_STYLE_NET') {
-          await this.styleTransfer.loadMobileNetStyleModel(this.reportStatus);
+          await loadMobileNetStyleModel(this.reportStatus);
         } else {
-          await this.styleTransfer.loadInceptionStyleModel(this.reportStatus);
+          await loadInceptionStyleModel(this.reportStatus);
         }
         this.enableStylizeButtons();
+        this.$emit('modelLoaded');
       } catch (error) {
         this.reportStatus(error);
       }
     },
-    async loadTransform(name) {
-      let type = event.startsWith('[Fast]') ? 'ORIGINAL_TRANSFORM_NET': 'SEPARABLE_TRANSFORM_NET';
+    async loadTransform(event) {
+      let type = event.startsWith('[Fast]') ? 'SEPARABLE_TRANSFORM_NET' : 'ORIGINAL_TRANSFORM_NET',
+          { loadOriginalTransformerModel, loadSeparableTransformerModel } = this.styleTransfer;
+
       try {
         this.disableStylizeButtons();
         if (type == 'ORIGINAL_TRANSFORM_NET') {
-          this.styleTransfer.loadOriginalTransformerModel(this.reportStatus);
+          await loadOriginalTransformerModel(this.reportStatus);
         } else {
-          this.styleTransfer.loadSeparableTransformerModel(this.reportStatus);
+          await loadSeparableTransformerModel(this.reportStatus);
         }
         this.enableStylizeButtons();
+        this.$emit('modelLoaded');
       } catch (error) {
         this.reportStatus(error);
       }

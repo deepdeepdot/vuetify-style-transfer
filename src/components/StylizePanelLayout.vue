@@ -78,18 +78,18 @@
           type="file"
           ref="select-file"
           accept="image/x-png, image/gif, image/jpeg"
-          style="display: none"
+          class="invisible"
         />
         <input
           type="file"
           ref="shoot-photo"
           accept="image/*"
           capture="camera"
-          style="display:none"
+          class="invisible"
         />
       </v-layout>
     </v-container>
-    <div class="filler"></div>
+    <div class="stylize-panel-layout-filler"></div>
   </v-card>
 </template>
 
@@ -246,9 +246,9 @@ const StylizePanelLayout = {
     },
     async transferStyle() {
       let refs = this.$refs,
-          styleImgA = refs.styleImgA.$refs['image'],
-          contentImg = refs.contentImg.$refs['image'],
-          slider = refs.styleControl.$refs['slider'],
+          styleImgA = refs['styleImgA'].$refs['image'],
+          contentImg = refs['contentImg'].$refs['image'],
+          slider = refs['styleControl'].$refs['slider'],
           styleRatio = slider.value ? slider.value / 100 : 1,
           params;
 
@@ -291,9 +291,13 @@ export default StylizePanelLayout;
 
 <style>
 
-.filler {
+.stylize-panel-layout-filler {
   display: block;
   height: 50px important!;
+}
+
+.invisible {
+  display: none;
 }
 
 </style>
