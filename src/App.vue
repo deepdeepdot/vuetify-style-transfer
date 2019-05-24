@@ -30,7 +30,7 @@ export default {
   components: {
     Tabs,
   },
-  data: function() {
+  data() {
     return {};
   }
 };

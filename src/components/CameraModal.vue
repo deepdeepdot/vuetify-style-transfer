@@ -41,7 +41,7 @@
 
 <script>
 
-import CameraCapture from '../lib/CameraCapture';
+import CameraCapture from '@/lib/CameraCapture';
 
 let cameraCapture; // singleton
 
@@ -52,7 +52,7 @@ export default {
     }
   },
   methods: {
-    openCameraModal: async function(image) {
+    async openCameraModal(image) {
       if (!cameraCapture) {
         let video = this.$refs['webcam-video'];
         cameraCapture = new CameraCapture(video);
@@ -65,7 +65,7 @@ export default {
       }
       this.dialog = true;
     },
-    snap: async function() {
+    async snap() {
       if (!cameraCapture) return;
       cameraCapture.captureImageFromCamera();
       setTimeout(() => {
@@ -74,7 +74,7 @@ export default {
     }
   },
   watch: {
-    dialog: function(show /*, oldValue */) {
+    dialog(show /*, oldValue */) {
       if (!cameraCapture) return;
       if (!show) {
         cameraCapture.deactivate();

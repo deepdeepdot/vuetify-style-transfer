@@ -5,7 +5,7 @@
 
 // const env = process.NODE_ENV == 'production' ? 'prod' : 'dev';
 import * as tf from '@tensorflow/tfjs';
-import config from '../config';
+import config from '@/config';
 
 // Need to double-check if this still holds, not much difference at first
 tf.ENV.set('WEBGL_PACK', false);  // This needs to be done otherwise things run very slow v1.0.4
@@ -30,12 +30,7 @@ let nets = {};
 
 let domain = config['model_domain_url'];
 
-function reportMsg(msg) {
-  // eslint-disable-next-line no-console
-  console.log(msg);
-}
-
-async function loadModel(type, options) {
+async function loadModel(type, options, reportMsg) {
   if (!nets[type]) {
     const url = domain + '/' + model[type];
 
@@ -69,13 +64,11 @@ export default class StyleTransfer {
       this.loadOptions = options;
     }
 
-    loadMobileNetStyleModel() {
+    loadMobileNetStyleModel(reportMsg, onProgress) {
       const modelLoad = loadModel('MOBILE_STYLE_NET', {
-        onProgress: function(perc) {
-          reportMsg('loadMobileNetStyleModel ' + perc);
-        },
+        onProgress,
         fetchFunc
-      });
+      }, reportMsg);
       modelLoad.then(function(result) {
           styleNet = result;
           return result;
@@ -83,13 +76,11 @@ export default class StyleTransfer {
       return modelLoad;
     }
 
-    loadInceptionStyleModel() {
+    loadInceptionStyleModel(reportMsg, onProgress) {
       const modelLoad = loadModel('INCEPTION_STYLE_NET', {
-        onProgress: function (perc) {
-          reportMsg('loadInceptionStyleModel ' + perc);
-        },
+        onProgress,
         fetchFunc
-      });
+      }, reportMsg);
       modelLoad.then(function (result) {
           styleNet = result;
           return result
@@ -97,13 +88,11 @@ export default class StyleTransfer {
       return modelLoad;
     }
 
-    loadOriginalTransformerModel() {
+    loadOriginalTransformerModel(reportMsg, onProgress) {
       const modelLoad = loadModel('ORIGINAL_TRANSFORM_NET', {
-        onProgress: function (perc) {
-          reportMsg('loadOriginalTransformerModel ' + perc);
-        },
+        onProgress,
         fetchFunc
-      });
+      }, reportMsg);
       modelLoad.then(function (result) {
           transformNet = result;
           return result
@@ -111,13 +100,11 @@ export default class StyleTransfer {
       return modelLoad;
     }
 
-    loadSeparableTransformerModel() {
+    loadSeparableTransformerModel(reportMsg, onProgress) {
       const modelLoad = loadModel('SEPARABLE_TRANSFORM_NET', {
-        onProgress: function (perc) {
-          reportMsg('loadSeparableTransformerModel ' + perc);
-        },
+        onProgress,
         fetchFunc
-      });
+      }, reportMsg);
       modelLoad.then(function (result) {
           transformNet = result;
           return result

@@ -98,14 +98,12 @@ import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
 import CameraModal from './CameraModal';
 
-import StyleTransfer from '../lib/StyleTransfer';
+import StyleTransfer from '@/lib/StyleTransfer';
 import links from './links';
 
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
 let styleTransfer = new StyleTransfer();
-styleTransfer.loadMobileNetStyleModel();
-styleTransfer.loadOriginalTransformerModel();
 
 function resizeImageToDestination(source, {width, height, destination}) {
   let ratio = source.width / source.height;
@@ -155,7 +153,7 @@ const StylizePanelLayout = {
   props: {
     twoStyles: Boolean
   },
-  data: function() {
+  data() {
     return {
       canFitInSingleRow: true,
       resetOptions: [
@@ -188,8 +186,36 @@ const StylizePanelLayout = {
       ],
     };
   },
+  mounted() {
+    this.initializeModels();
+  },
   methods: {
-    imageSizeChanged: function( /* unused: size, idx */) {
+    reportStatus(msg) {
+        this.$refs['styleControl'].stylizeButtonLabel = msg;
+    },
+    enableStylizeButtons() {
+      let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
+      this.reportStatus(readyMsg);
+      this.$refs['styleControl'].enableStylizeButtons();
+    },
+    disableStylizeButtons() {
+      this.$refs['styleControl'].disableStylizeButtons();
+    },
+    initializeModels() {
+      this.disableStylizeButtons();
+      try {
+        Promise.all([
+          styleTransfer.loadMobileNetStyleModel(this.reportStatus),
+          styleTransfer.loadOriginalTransformerModel(this.reportStatus)
+        ]).then(() => {
+          this.enableStylizeButtons();
+        })
+      }
+      catch(e) {
+        this.reportStatus(e);
+      }
+    },
+    imageSizeChanged( /* unused: size, idx */) {
       const styleImgA = this.$refs['styleImgA'];
       const styleImgB = this.$refs['styleImgB'];
 
@@ -202,7 +228,7 @@ const StylizePanelLayout = {
         // It does the trick, but the jumping and "out of sync" dragging is not nice
       }
     },
-    updateImageSource: function(selected, idx) {
+    updateImageSource(selected, idx) {
       let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
           image = this.$refs[mapping[idx]].$refs['image'],
           randomNumber,
@@ -238,7 +264,7 @@ const StylizePanelLayout = {
           image.src = url;
       }
     },
-    transferStyle: function() {
+    transferStyle() {
       let refs = this.$refs,
           styleImgA = refs.styleImgA.$refs['image'],
           contentImg = refs.contentImg.$refs['image'],
@@ -246,11 +272,9 @@ const StylizePanelLayout = {
           styleRatio = slider.value ? slider.value / 100 : 1,
           params;
 
-      let reportStatus = function(msg, /* options: disableControl so no functionality !? */) {
-        refs.styleControl.newButtonLabel = msg;
-      }
+      let reportStatus = this.reportStatus;
 
-      const useSingleStyle = !this.twoStyles;
+      let useSingleStyle = !this.twoStyles;
       if (useSingleStyle) {
         params = {
           contentImg,
@@ -261,7 +285,7 @@ const StylizePanelLayout = {
         };
         styleTransfer.startStyling(params).then(() => {
           // Restore original label for the button
-          reportStatus('Stylize');
+          this.enableStylizeButtons();
         });
       }
       else {
@@ -276,30 +300,34 @@ const StylizePanelLayout = {
         };
         styleTransfer.startCombining(params).then(() => {
           // Restore original label for the button
-          reportStatus('Combine Styles');
+          this.enableStylizeButtons();
         });
       }
     },
-    loadStyle: function(name) {
+    async loadStyle(name) {
       try {
+        this.disableStylizeButtons();
         if (name == 'MOBILE_STYLE_NET') {
-          styleTransfer.loadMobileNetStyleModel();
+          await styleTransfer.loadMobileNetStyleModel(this.reportStatus);
         } else {
-          styleTransfer.loadInceptionStyleModel();
+          await styleTransfer.loadInceptionStyleModel(this.reportStatus);
         }
+        this.enableStylizeButtons();
       } catch (error) {
-        this.$refs['styleControl'].newButtonLabel = error;
+        reportStatus(error);
       }
     },
-    loadTransform: function(name) {
+    async loadTransform(name) {
       try {
+        this.disableStylizeButtons();
         if (name == 'ORIGINAL_TRANSFORM_NET') {
-          styleTransfer.loadOriginalTransformerModel();
+          styleTransfer.loadOriginalTransformerModel(this.reportStatus);
         } else {
-          styleTransfer.loadSeparableTransformerModel();
+          styleTransfer.loadSeparableTransformerModel(this.reportStatus);
         }
+        this.enableStylizeButtons();
       } catch (error) {
-        this.$refs['styleControl'].newButtonLabel = error;
+        reportStatus(error);
       }
     }
   }

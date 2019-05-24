@@ -83,7 +83,7 @@ export default {
     showSquare: Boolean,
     resetSelectedOptions: Array,
   },
-  mounted: function() {
+  mounted() {
     this.updateImageSize();
   },
   data: () => ({
@@ -92,7 +92,7 @@ export default {
     checkbox: false,
   }),
   computed: {
-    getItemsForSelect: function() {
+    getItemsForSelect() {
       return this.options.map((id) => ({
         value: id,
         text: idToLabel(id)
@@ -100,19 +100,19 @@ export default {
     }
   },
   watch: {
-    slider: function() {
+    slider() {
       this.dragging();
     }
   },
   methods: {
-    isDesktop: function() {
+    isDesktop() {
       return !isMobile;
     },
-    dragging: function() {
+    dragging() {
       this.$emit('imageSizeChanged', this.slider);
       this.updateImageSize();
     },
-    updateImageSize: function() {
+    updateImageSize() {
       const square = this.checkbox;
       const height = this.slider;
 
