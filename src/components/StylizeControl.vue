@@ -55,10 +55,10 @@ export default {
     return {
       stylizeButtonLabel: null,
       slider: 70,
-      style: "[Fast] Distilled MobileNet style model (9.6MB)",
-      transform: "[Fast] Separable_conv2d transformer (2.4MB)",
-      styleOptions: ["[Fast] Distilled MobileNet style model (9.6MB)", "[High quality] Original Inceptionv3 style model (36.3MB)"],
-      transformOptions: ["[Fast] Separable_conv2d transformer (2.4MB)", "[High quality] Original transformer model (7.9MB)"],
+      style: "[Fast] (9.6MB) Distilled MobileNet style model",
+      transform: "[Fast] (2.4MB) Separable_conv2d transformer",
+      styleOptions: ["[Fast] (9.6MB) Distilled MobileNet style model", "[High quality] (36.3MB) Original Inceptionv3 style model"],
+      transformOptions: ["[Fast] (2.4MB) Separable_conv2d transformer", "[High quality] (7.9MB) Original transformer model"],
     };
   },
   async mounted() {
@@ -109,12 +109,12 @@ export default {
     async loadStyle(event) {
       let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET',
           { loadMobileNetStyleModel, loadInceptionStyleModel} = this.styleTransfer;
-      
+
       try {
         this.disableStylizeButtons();
-        if (type == 'MOBILE_STYLE_NET') {
+        if (type === 'MOBILE_STYLE_NET') {
           await loadMobileNetStyleModel(this.reportStatus);
-        } else {
+        } else if (type === 'INCEPTION_STYLE_NET') {
           await loadInceptionStyleModel(this.reportStatus);
         }
         this.enableStylizeButtons();
@@ -129,10 +129,10 @@ export default {
 
       try {
         this.disableStylizeButtons();
-        if (type == 'ORIGINAL_TRANSFORM_NET') {
-          await loadOriginalTransformerModel(this.reportStatus);
-        } else {
+        if (type === 'SEPARABLE_TRANSFORM_NET') {
           await loadSeparableTransformerModel(this.reportStatus);
+        } else if (type === 'ORIGINAL_TRANSFORM_NET') {
+          await loadOriginalTransformerModel(this.reportStatus);
         }
         this.enableStylizeButtons();
         this.$emit('modelLoaded');
