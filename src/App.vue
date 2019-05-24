@@ -12,7 +12,7 @@
     </v-toolbar>
 
     <v-content>
-      <Tabs />
+      <Tabs :styleTransfer="styleTransfer"/>
     </v-content>
   </v-app>
 </template>
@@ -25,13 +25,17 @@
 // import StylizeControl from "./components/StylizeControl";
 import Tabs from "./components/Tabs";
 
+import StyleTransfer from '@/lib/StyleTransfer';
+
 export default {
   name: "App",
   components: {
     Tabs,
   },
   data() {
-    return {};
+    return {
+      styleTransfer: new StyleTransfer()
+    };
   }
 };
 </script>

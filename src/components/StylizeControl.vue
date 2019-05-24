@@ -41,11 +41,15 @@
 </template>
 
 <script>
+
+let modelLoaded = false;
+
 export default {
   name: "StylizeControl",
   props: {
     sliderLabel: String,
     buttonLabel: String,
+    styleTransfer: Object,
   },
   data() {
     return {
@@ -57,25 +61,27 @@ export default {
       transformOptions: ["[Fast] Separable_conv2d transformer (2.4MB)", "[High quality] Original transformer model (7.9MB)"],
     };
   },
+  async mounted() {
+    if (!modelLoaded) {
+      await this.initializeModels();
+      modelLoaded = true;
+      this.$emit('modelLoaded');
+    }
+  },
   computed: {
     buttonLabelValue() {
       return this.stylizeButtonLabel || this.buttonLabel;
     }
   },
   methods: {
+    reportStatus(msg) {
+      this.stylizeButtonLabel = msg;
+    },
     styleAction() {
       this.$emit('styleAction');
     },
     randomize() {
       alert('not implemented');
-    },
-    loadStyle(event) {
-      let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET';
-      this.$emit('loadStyle', type);
-    },
-    loadTransform(event) {
-      let type = event.startsWith('[Fast]') ? 'ORIGINAL_TRANSFORM_NET': 'SEPARABLE_TRANSFORM_NET';
-      this.$emit('loadTransform', type);
     },
     enableStylizeButtons() {
       this.$refs['styleButton'].disable = false;
@@ -86,6 +92,48 @@ export default {
       this.$refs['styleButton'].disable = true;
       this.$refs['modelSelectStyle'].disable = true;
       this.$refs['modelSelectTransformer'].disable = true;
+    },
+    initializeModels() {
+      this.disableStylizeButtons();
+      try {
+        return Promise.all([
+          this.styleTransfer.loadMobileNetStyleModel(this.reportStatus),
+          this.styleTransfer.loadOriginalTransformerModel(this.reportStatus)
+        ]).then(() => {
+          this.enableStylizeButtons();
+        })
+      }
+      catch(e) {
+        this.reportStatus(e);
+      }
+    },
+    async loadStyle(name) {
+      let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET';
+      try {
+        this.disableStylizeButtons();
+        if (type == 'MOBILE_STYLE_NET') {
+          await this.styleTransfer.loadMobileNetStyleModel(this.reportStatus);
+        } else {
+          await this.styleTransfer.loadInceptionStyleModel(this.reportStatus);
+        }
+        this.enableStylizeButtons();
+      } catch (error) {
+        this.reportStatus(error);
+      }
+    },
+    async loadTransform(name) {
+      let type = event.startsWith('[Fast]') ? 'ORIGINAL_TRANSFORM_NET': 'SEPARABLE_TRANSFORM_NET';
+      try {
+        this.disableStylizeButtons();
+        if (type == 'ORIGINAL_TRANSFORM_NET') {
+          this.styleTransfer.loadOriginalTransformerModel(this.reportStatus);
+        } else {
+          this.styleTransfer.loadSeparableTransformerModel(this.reportStatus);
+        }
+        this.enableStylizeButtons();
+      } catch (error) {
+        this.reportStatus(error);
+      }
     }
   }
 };

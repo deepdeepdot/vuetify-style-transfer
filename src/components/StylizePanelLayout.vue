@@ -58,11 +58,11 @@
               <v-card color>
                 <StylizeControl
                   ref="styleControl"
+                  :styleTransfer="styleTransfer"
                   :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
                   sliderLabel="Stylization Ratio"
-                  @styleAction="transferStyle()"
-                  @loadStyle="loadStyle($event)"
-                  @loadTransform="loadTransform($event)"
+                  @styleAction="transferStyle"
+                  @modelLoaded="enableStylizeButtons"
                 />
               </v-card>
             </v-flex>
@@ -97,13 +97,9 @@
 import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
 import CameraModal from './CameraModal';
-
-import StyleTransfer from '@/lib/StyleTransfer';
 import links from './links';
 
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-
-let styleTransfer = new StyleTransfer();
 
 function resizeImageToDestination(source, {width, height, destination}) {
   let ratio = source.width / source.height;
@@ -151,7 +147,8 @@ const StylizePanelLayout = {
     CameraModal
   },
   props: {
-    twoStyles: Boolean
+    twoStyles: Boolean,
+    styleTransfer: Object
   },
   data() {
     return {
@@ -186,9 +183,6 @@ const StylizePanelLayout = {
       ],
     };
   },
-  mounted() {
-    this.initializeModels();
-  },
   methods: {
     reportStatus(msg) {
         this.$refs['styleControl'].stylizeButtonLabel = msg;
@@ -200,20 +194,6 @@ const StylizePanelLayout = {
     },
     disableStylizeButtons() {
       this.$refs['styleControl'].disableStylizeButtons();
-    },
-    initializeModels() {
-      this.disableStylizeButtons();
-      try {
-        Promise.all([
-          styleTransfer.loadMobileNetStyleModel(this.reportStatus),
-          styleTransfer.loadOriginalTransformerModel(this.reportStatus)
-        ]).then(() => {
-          this.enableStylizeButtons();
-        })
-      }
-      catch(e) {
-        this.reportStatus(e);
-      }
     },
     imageSizeChanged( /* unused: size, idx */) {
       const styleImgA = this.$refs['styleImgA'];
@@ -264,7 +244,7 @@ const StylizePanelLayout = {
           image.src = url;
       }
     },
-    transferStyle() {
+    async transferStyle() {
       let refs = this.$refs,
           styleImgA = refs.styleImgA.$refs['image'],
           contentImg = refs.contentImg.$refs['image'],
@@ -283,10 +263,9 @@ const StylizePanelLayout = {
           destination: refs.canvas,
           reportStatus,
         };
-        styleTransfer.startStyling(params).then(() => {
-          // Restore original label for the button
-          this.enableStylizeButtons();
-        });
+        this.disableStylizeButtons();
+        await this.styleTransfer.startStyling(params);
+        this.enableStylizeButtons();
       }
       else {
         let styleImgB = refs.styleImgB.$refs['image'];
@@ -298,36 +277,9 @@ const StylizePanelLayout = {
           destination: refs.canvas,
           reportStatus,
         };
-        styleTransfer.startCombining(params).then(() => {
-          // Restore original label for the button
-          this.enableStylizeButtons();
-        });
-      }
-    },
-    async loadStyle(name) {
-      try {
         this.disableStylizeButtons();
-        if (name == 'MOBILE_STYLE_NET') {
-          await styleTransfer.loadMobileNetStyleModel(this.reportStatus);
-        } else {
-          await styleTransfer.loadInceptionStyleModel(this.reportStatus);
-        }
+        this.styleTransfer.startCombining(params);
         this.enableStylizeButtons();
-      } catch (error) {
-        reportStatus(error);
-      }
-    },
-    async loadTransform(name) {
-      try {
-        this.disableStylizeButtons();
-        if (name == 'ORIGINAL_TRANSFORM_NET') {
-          styleTransfer.loadOriginalTransformerModel(this.reportStatus);
-        } else {
-          styleTransfer.loadSeparableTransformerModel(this.reportStatus);
-        }
-        this.enableStylizeButtons();
-      } catch (error) {
-        reportStatus(error);
       }
     }
   }

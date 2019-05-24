@@ -15,13 +15,13 @@
       >
         <v-tab-item :key="1">
           <v-card flat>
-            <StylizePanelLayout/>
+            <StylizePanelLayout :styleTransfer="styleTransfer"/>
           </v-card>
         </v-tab-item>
 
         <v-tab-item :key="2">
           <v-card flat>
-            <StylizePanelLayout twoStyles/>
+            <StylizePanelLayout twoStyles :styleTransfer="styleTransfer"/>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -36,10 +36,13 @@
   import StylizePanelLayout from './StylizePanelLayout'
 
   export default {
-    data () {
+    data() {
       return {
         active: null,
       }
+    },
+    props: {
+      styleTransfer: Object
     },
     components: {
         StylizePanelLayout,
