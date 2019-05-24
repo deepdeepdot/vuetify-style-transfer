@@ -1,3 +1,5 @@
+/* eslint-disable one-var */
+/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 /*
  * StyleTransfer
@@ -11,29 +13,28 @@ import config from '@/config';
 tf.ENV.set('WEBGL_PACK', false);  // This needs to be done otherwise things run very slow v1.0.4
 
 function imgToTensor(img) {
-    if (!img) { alert('imgToTensor: invalid image'); }
-    return tf.browser.fromPixels(img).toFloat().div(tf.scalar(255)).expandDims();
+  if (!img) { alert('imgToTensor: invalid image'); }
+  return tf.browser.fromPixels(img).toFloat().div(tf.scalar(255)).expandDims();
 }
 
 const model = {
-    MOBILE_STYLE_NET: 'saved_model_style_js/model.json',
-    INCEPTION_STYLE_NET: 'saved_model_style_inception_js/model.json',
-    ORIGINAL_TRANSFORM_NET: 'saved_model_transformer_js/model.json',
-    SEPARABLE_TRANSFORM_NET: 'saved_model_transformer_separable_js/model.json',
+  MOBILE_STYLE_NET: 'saved_model_style_js/model.json',
+  INCEPTION_STYLE_NET: 'saved_model_style_inception_js/model.json',
+  ORIGINAL_TRANSFORM_NET: 'saved_model_transformer_js/model.json',
+  SEPARABLE_TRANSFORM_NET: 'saved_model_transformer_separable_js/model.json',
 };
 
 // Clarity vs flexibility
 // Clarity: Less 'this' vs support for multiple instances of StyleTransfer
-let styleNet = null;
-let transformNet = null;
-let nets = {};
-
-let domain = config['model_domain_url'];
+let domain = config['model_domain_url'],
+    styleNet = null,
+    transformNet = null,
+    nets = {};
 
 async function loadModel(type, options, reportMsg) {
-  if (!nets[type]) {
-    const url = domain + '/' + model[type];
+  const url = domain + '/' + model[type];
 
+  if (!nets[type]) {
     let numTrials = 3;
     for (let i = 0; i < numTrials; i++) {
       try {
@@ -41,8 +42,8 @@ async function loadModel(type, options, reportMsg) {
         reportMsg('Loaded... ' + type);
         break;
       } catch (error) {
-        alert("loading model error: " + error);
-        reportMsg("loading model error: ", error);
+        alert('loading model error: ' + error);
+        reportMsg('loading model error: ', error);
         if (i === numTrials) {
           alert('Sorry, we could not load the models, retry the app later');
         }
@@ -56,127 +57,111 @@ async function loadModel(type, options, reportMsg) {
 const fetchFunc = window.fetch.bind(window);
 
 export default class StyleTransfer {
-    constructor() {
-      this.loadOptions = {};
-    }
+  loadMobileNetStyleModel(reportMsg, onProgress) {
+    return loadModel('MOBILE_STYLE_NET', {
+      onProgress,
+      fetchFunc,
+    }, reportMsg).then(function(result) {
+        styleNet = result;
+        return result;
+    });
+  }
 
-    setLoadOptions(options) {
-      this.loadOptions = options;
-    }
+  loadInceptionStyleModel(reportMsg, onProgress) {
+    return loadModel('INCEPTION_STYLE_NET', {
+      onProgress,
+      fetchFunc,
+    }, reportMsg).then(function(result) {
+        styleNet = result;
+        return result;
+    });
+  }
 
-    loadMobileNetStyleModel(reportMsg, onProgress) {
-      const modelLoad = loadModel('MOBILE_STYLE_NET', {
-        onProgress,
-        fetchFunc
-      }, reportMsg);
-      modelLoad.then(function(result) {
-          styleNet = result;
-          return result;
-      });
-      return modelLoad;
-    }
+  loadOriginalTransformerModel(reportMsg, onProgress) {
+    return loadModel('ORIGINAL_TRANSFORM_NET', {
+      onProgress,
+      fetchFunc,
+    }, reportMsg).then(function(result) {
+        transformNet = result;
+        return result;
+    });
+  }
 
-    loadInceptionStyleModel(reportMsg, onProgress) {
-      const modelLoad = loadModel('INCEPTION_STYLE_NET', {
-        onProgress,
-        fetchFunc
-      }, reportMsg);
-      modelLoad.then(function (result) {
-          styleNet = result;
-          return result
-      });
-      return modelLoad;
-    }
+  loadSeparableTransformerModel(reportMsg, onProgress) {
+    return loadModel('SEPARABLE_TRANSFORM_NET', {
+      onProgress,
+      fetchFunc,
+    }, reportMsg).then(function(result) {
+        transformNet = result;
+        return result;
+    });
+  }
 
-    loadOriginalTransformerModel(reportMsg, onProgress) {
-      const modelLoad = loadModel('ORIGINAL_TRANSFORM_NET', {
-        onProgress,
-        fetchFunc
-      }, reportMsg);
-      modelLoad.then(function (result) {
-          transformNet = result;
-          return result
-      });
-      return modelLoad;
-    }
+  async startStyling({contentImg, styleImg, styleRatio, destination, reportStatus}) {
+    await tf.nextFrame();
+    reportStatus('Generating 100D style representation');
 
-    loadSeparableTransformerModel(reportMsg, onProgress) {
-      const modelLoad = loadModel('SEPARABLE_TRANSFORM_NET', {
-        onProgress,
-        fetchFunc
-      }, reportMsg);
-      modelLoad.then(function (result) {
-          transformNet = result;
-          return result
-      });
-      return modelLoad;
-    }
-
-    async startStyling({ contentImg, styleImg, styleRatio, destination, reportStatus }) {
-      await tf.nextFrame();
-      reportStatus('Generating 100D style representation');
-
-      await tf.nextFrame();
-      let bottleneck = await tf.tidy(() => {
-          return styleNet.predict(imgToTensor(styleImg));
-      });
-      if (styleRatio !== 1.0) {
-          reportStatus('Generating 100D identity style representation');
-          await tf.nextFrame();
-          const identityBottleneck = await tf.tidy(() => {
-              return styleNet.predict(imgToTensor(contentImg));
-          });
-          const styleBottleneck = bottleneck;
-          bottleneck = await tf.tidy(() => {
-              const styleBottleneckScaled = styleBottleneck.mul(tf.scalar(styleRatio));
-              const identityBottleneckScaled = identityBottleneck.mul(tf.scalar(1.0 - styleRatio));
-              return styleBottleneckScaled.addStrict(identityBottleneckScaled);
-          });
-          styleBottleneck.dispose();
-          identityBottleneck.dispose();
-      }
-      reportStatus('Stylizing image...');
-      await tf.nextFrame();
-      const stylized = await tf.tidy(() => {
-          return transformNet.predict([imgToTensor(contentImg), bottleneck]).squeeze();
-      });
-      await tf.browser.toPixels(stylized, destination);
-      bottleneck.dispose();  // Might wanna keep this around
-      stylized.dispose();
-    }
-
-    async startCombining({ combContentImg, combStyleImg1, combStyleImg2, combStyleRatio, destination, reportStatus }) {
+    await tf.nextFrame();
+    let bottleneck = await tf.tidy(() => {
+        return styleNet.predict(imgToTensor(styleImg));
+    });
+    if (styleRatio !== 1.0) {
+        reportStatus('Generating 100D identity style representation');
         await tf.nextFrame();
-        reportStatus('Generating 100D style representation of image 1');
-        await tf.nextFrame();
-        const bottleneck1 = await tf.tidy(() => {
-            return styleNet.predict(imgToTensor(combStyleImg1));
+        const identityBottleneck = await tf.tidy(() => {
+            return styleNet.predict(imgToTensor(contentImg));
         });
-
-        reportStatus('Generating 100D style representation of image 2');
-        await tf.nextFrame();
-        const bottleneck2 = await tf.tidy(() => {
-            return styleNet.predict(imgToTensor(combStyleImg2));
+        const styleBottleneck = bottleneck;
+        bottleneck = await tf.tidy(() => {
+            const styleBottleneckScaled = styleBottleneck.mul(tf.scalar(styleRatio));
+            const identityBottleneckScaled = identityBottleneck.mul(tf.scalar(1.0 - styleRatio));
+            return styleBottleneckScaled.addStrict(identityBottleneckScaled);
         });
-
-        reportStatus('Stylizing image...');
-        await tf.nextFrame();
-        const combinedBottleneck = await tf.tidy(() => {
-            const scaledBottleneck1 = bottleneck1.mul(tf.scalar(1 - combStyleRatio));
-            const scaledBottleneck2 = bottleneck2.mul(tf.scalar(combStyleRatio));
-            return scaledBottleneck1.addStrict(scaledBottleneck2);
-        });
-
-        const stylized = await tf.tidy(() => {
-            return transformNet.predict([imgToTensor(combContentImg), combinedBottleneck]).squeeze();
-        });
-
-        await tf.browser.toPixels(stylized, destination);
-        bottleneck1.dispose();  // Might wanna keep this around
-        bottleneck2.dispose();
-        combinedBottleneck.dispose();
-        stylized.dispose();
+        styleBottleneck.dispose();
+        identityBottleneck.dispose();
     }
+    reportStatus('Stylizing image...');
+    await tf.nextFrame();
+    const stylized = await tf.tidy(() => {
+        return transformNet.predict([imgToTensor(contentImg), bottleneck]).squeeze();
+    });
+    await tf.browser.toPixels(stylized, destination);
+    bottleneck.dispose(); // Might wanna keep this around
+    stylized.dispose();
+  }
+
+  async startCombining({combContentImg, combStyleImg1, combStyleImg2, combStyleRatio, destination, reportStatus }) {
+    await tf.nextFrame();
+    reportStatus('Generating 100D style representation of image 1');
+    await tf.nextFrame();
+    const bottleneck1 = await tf.tidy(() => {
+        return styleNet.predict(imgToTensor(combStyleImg1));
+    });
+
+    reportStatus('Generating 100D style representation of image 2');
+    await tf.nextFrame();
+    const bottleneck2 = await tf.tidy(() => {
+        return styleNet.predict(imgToTensor(combStyleImg2));
+    });
+
+    reportStatus('Stylizing image...');
+    await tf.nextFrame();
+    const combinedBottleneck = await tf.tidy(() => {
+        const scaledBottleneck1 = bottleneck1.mul(tf.scalar(1 - combStyleRatio));
+        const scaledBottleneck2 = bottleneck2.mul(tf.scalar(combStyleRatio));
+        return scaledBottleneck1.addStrict(scaledBottleneck2);
+    });
+
+    const stylized = await tf.tidy(() => {
+        return transformNet.predict([imgToTensor(combContentImg), combinedBottleneck]).squeeze();
+    });
+
+    await tf.browser.toPixels(stylized, destination);
+    bottleneck1.dispose();  // Might wanna keep this around
+    bottleneck2.dispose();
+    combinedBottleneck.dispose();
+    stylized.dispose();
+  }
 }
 
 /*
@@ -207,6 +192,7 @@ export default class StyleTransfer {
   }
 
   async benchmarkStyle(x, styleNet) {
+    let reportMsg = console.log;
     const profile = await tf.profile(() => {
       tf.tidy(() => {
         const dummyOut = styleNet.predict(x);
@@ -226,6 +212,7 @@ export default class StyleTransfer {
   }
 
   async benchmarkTransform(x, bottleneck, transformNet) {
+    let reportMsg = console.log;
     const profile = await tf.profile(() => {
       tf.tidy(() => {
         const dummyOut = transformNet.predict([x, bottleneck]);
