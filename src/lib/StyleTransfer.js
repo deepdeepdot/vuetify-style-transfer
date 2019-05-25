@@ -34,7 +34,7 @@ let domain = config['model_domain_url'],
 async function loadModel(type, options, reportStatus, reportError) {
   const url = domain + '/' + model[type];
 
-  if (!nets[type]) {
+  if (!nets[type]) { // This is not sufficient to prevent multiple threads loading the same
     let numTrials = 3;
     for (let i = 0; i < numTrials; i++) {
       try {

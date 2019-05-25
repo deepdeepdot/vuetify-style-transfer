@@ -12,7 +12,7 @@
     </v-toolbar>
 
     <v-content>
-      <Tabs :styleTransfer="styleTransfer"/>
+      <Tabs ref="tabs" :styleTransfer="styleTransfer"/>
     </v-content>
   </v-app>
 </template>
@@ -36,6 +36,12 @@ export default {
     return {
       styleTransfer: new StyleTransfer()
     };
-  }
+  },
+  mounted() {
+    let styleControl = this.$refs['tabs']
+                           .$refs['stylePanel1']
+                           .$refs['styleControl'];
+    styleControl.initializeModels();
+  },
 };
 </script>

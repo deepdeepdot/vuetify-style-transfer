@@ -38,17 +38,14 @@
   export default {
     data() {
       return {
-        active: null,
+        active: null
       }
     },
     props: {
       styleTransfer: Object
     },
     components: {
-        StylizePanelLayout,
-    },
-    mounted() {
-      this.$refs['stylePanel1'].initializeModels();
+        StylizePanelLayout
     },
   }
 </script>

@@ -10,7 +10,7 @@
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 0)"
             @imageSizeChanged="imageSizeChanged($event, 0)"
-            :showSquare="twoStyles"
+            :showForceSquare="twoStyles"
             :resetSelectedOptions="resetOptions"
           />
         </v-flex>
@@ -23,7 +23,7 @@
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 1)"
             @imageSizeChanged="imageSizeChanged($event, 1)"
-            :showSquare="twoStyles"
+            :showForceSquare="twoStyles"
             :resetSelectedOptions="resetOptions"
           />
         </v-flex>
@@ -38,7 +38,7 @@
                   imgUrl="/images/chicago.jpg"
                   :options="contentOptions"
                   @imageSelected="updateImageSource($event, 2)"
-                  :showSquare="twoStyles"
+                  :showForceSquare="twoStyles"
                   :resetSelectedOptions="resetOptions"
                 />
               </v-card>
@@ -99,9 +99,8 @@ import StylizeControl from './StylizeControl';
 import CameraModal from './CameraModal';
 import links from './links';
 import {
-    loadImageFromFile,
-    loadImageFromFileSelect,
-    resizeImageToDestination,
+  loadImageFromFile,
+  loadImageFromFileSelect
 } from '@/lib/ImageUtils';
 
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -157,9 +156,6 @@ const StylizePanelLayout = {
     reportStatus(msg) {
         this.getStyleControl().stylizeButtonLabel = msg;
     },
-    initializeModels() {
-      this.getStyleControl().initializeModels();
-    },
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
       this.reportStatus(readyMsg);
@@ -184,9 +180,8 @@ const StylizePanelLayout = {
     updateImageSource(selected, idx) {
       let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
           image = this.$refs[mapping[idx]].$refs['image'],
-          randomNumber,
           fileSelect,
-          url;
+          randomNumber;
 
       image.crossOrigin = 'Anonymous'; // for tensorflow
 
@@ -195,8 +190,8 @@ const StylizePanelLayout = {
           if (isMobile) {
             let shootPhoto = this.$refs['shoot-photo'];
             shootPhoto.onchange = function shootPhoto(evt) {
-              let file = evt.target.files[0];
-              loadImageFromFile(file, image, { width: 320 });
+              let { files } = evt.target;
+              loadImageFromFile(files[0], image, { width: 320 });
             };
             shootPhoto.click();
           } else {
@@ -209,12 +204,10 @@ const StylizePanelLayout = {
           break;
         case 'Random image from wikiart.org':
           randomNumber = Math.floor(Math.random() * links.length);
-          url = links[randomNumber];
-          image.src = url;
+          image.src = links[randomNumber];
           break;
         default:
-          url = `/images/${selected}.jpg`;
-          image.src = url;
+          image.src = `/images/${selected}.jpg`;
       }
     },
     async transferStyle() {
@@ -225,7 +218,7 @@ const StylizePanelLayout = {
           styleRatio = slider.value ? slider.value / 100 : 1,
           params;
 
-      let reportStatus = this.reportStatus;
+      let { reportStatus } = this;
 
       let useSingleStyle = !this.twoStyles;
       if (useSingleStyle) {
