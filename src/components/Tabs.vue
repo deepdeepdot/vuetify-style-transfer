@@ -15,7 +15,7 @@
       >
         <v-tab-item :key="1">
           <v-card flat>
-            <StylizePanelLayout :styleTransfer="styleTransfer"/>
+            <StylizePanelLayout ref="stylePanel1" :styleTransfer="styleTransfer"/>
           </v-card>
         </v-tab-item>
 
@@ -46,6 +46,9 @@
     },
     components: {
         StylizePanelLayout,
+    },
+    async mounted() {
+      this.$refs['stylePanel1'].initializeModels();
     },
   }
 </script>

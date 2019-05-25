@@ -187,6 +187,14 @@ const StylizePanelLayout = {
     reportStatus(msg) {
         this.$refs['styleControl'].stylizeButtonLabel = msg;
     },
+    async initializeModels() {
+      try {
+        await this.$refs['styleControl'].initializeModels();
+        this.$emit('modelLoaded');
+      } catch(e) {
+        this.reportStatus(e);
+      }
+    },
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
       this.reportStatus(readyMsg);

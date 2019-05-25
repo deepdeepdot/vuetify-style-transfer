@@ -20,8 +20,8 @@ function imgToTensor(img) {
 const model = {
   MOBILE_STYLE_NET: 'saved_model_style_js/model.json',
   INCEPTION_STYLE_NET: 'saved_model_style_inception_js/model.json',
-  ORIGINAL_TRANSFORM_NET: 'saved_model_transformer_js/model.json',
   SEPARABLE_TRANSFORM_NET: 'saved_model_transformer_separable_js/model.json',
+  ORIGINAL_TRANSFORM_NET: 'saved_model_transformer_js/model.json',
 };
 
 // Clarity vs flexibility

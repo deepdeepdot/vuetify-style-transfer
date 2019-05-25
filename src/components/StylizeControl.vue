@@ -42,8 +42,6 @@
 
 <script>
 
-let modelLoaded = false;
-
 export default {
   name: "StylizeControl",
   props: {
@@ -60,16 +58,6 @@ export default {
       styleOptions: ["[Fast] (9.6MB) Distilled MobileNet style model", "[High quality] (36.3MB) Original Inceptionv3 style model"],
       transformOptions: ["[Fast] (2.4MB) Separable_conv2d transformer", "[High quality] (7.9MB) Original transformer model"],
     };
-  },
-  async mounted() {
-    if (modelLoaded) return;
-    try {
-      await this.initializeModels();
-      modelLoaded = true;
-      this.$emit('modelLoaded');
-    } catch(e) {
-      this.reportStatus(e);
-    }
   },
   computed: {
     buttonLabelValue() {
