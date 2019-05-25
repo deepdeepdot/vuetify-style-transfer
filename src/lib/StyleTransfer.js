@@ -61,8 +61,8 @@ export default class StyleTransfer {
       onProgress,
       fetchFunc,
     }, reportStatus, reportError).then(function(result) {
-        styleNet = result;
-        return result;
+      styleNet = result;
+      return result;
     });
   }
 
@@ -71,8 +71,8 @@ export default class StyleTransfer {
       onProgress,
       fetchFunc,
     }, reportStatus, reportError).then(function(result) {
-        styleNet = result;
-        return result;
+      styleNet = result;
+      return result;
     });
   }
 
@@ -81,8 +81,8 @@ export default class StyleTransfer {
       onProgress,
       fetchFunc,
     }, reportStatus, reportError).then(function(result) {
-        transformNet = result;
-        return result;
+      transformNet = result;
+      return result;
     });
   }
 
@@ -91,8 +91,8 @@ export default class StyleTransfer {
       onProgress,
       fetchFunc,
     }, reportStatus, reportError).then(function(result) {
-        transformNet = result;
-        return result;
+      transformNet = result;
+      return result;
     });
   }
 
@@ -102,27 +102,27 @@ export default class StyleTransfer {
 
     await tf.nextFrame();
     let bottleneck = await tf.tidy(() => {
-        return styleNet.predict(imgToTensor(styleImg));
+      return styleNet.predict(imgToTensor(styleImg));
     });
     if (styleRatio !== 1.0) {
-        reportStatus('Generating 100D identity style representation');
-        await tf.nextFrame();
-        const identityBottleneck = await tf.tidy(() => {
-            return styleNet.predict(imgToTensor(contentImg));
-        });
-        const styleBottleneck = bottleneck;
-        bottleneck = await tf.tidy(() => {
-            const styleBottleneckScaled = styleBottleneck.mul(tf.scalar(styleRatio));
-            const identityBottleneckScaled = identityBottleneck.mul(tf.scalar(1.0 - styleRatio));
-            return styleBottleneckScaled.addStrict(identityBottleneckScaled);
-        });
-        styleBottleneck.dispose();
-        identityBottleneck.dispose();
+      reportStatus('Generating 100D identity style representation');
+      await tf.nextFrame();
+      const identityBottleneck = await tf.tidy(() => {
+          return styleNet.predict(imgToTensor(contentImg));
+      });
+      const styleBottleneck = bottleneck;
+      bottleneck = await tf.tidy(() => {
+        const styleBottleneckScaled = styleBottleneck.mul(tf.scalar(styleRatio));
+        const identityBottleneckScaled = identityBottleneck.mul(tf.scalar(1.0 - styleRatio));
+        return styleBottleneckScaled.addStrict(identityBottleneckScaled);
+      });
+      styleBottleneck.dispose();
+      identityBottleneck.dispose();
     }
     reportStatus('Stylizing image...');
     await tf.nextFrame();
     const stylized = await tf.tidy(() => {
-        return transformNet.predict([imgToTensor(contentImg), bottleneck]).squeeze();
+      return transformNet.predict([imgToTensor(contentImg), bottleneck]).squeeze();
     });
     await tf.browser.toPixels(stylized, destination);
     bottleneck.dispose(); // Might wanna keep this around
@@ -134,25 +134,25 @@ export default class StyleTransfer {
     reportStatus('Generating 100D style representation of image 1');
     await tf.nextFrame();
     const bottleneck1 = await tf.tidy(() => {
-        return styleNet.predict(imgToTensor(combStyleImg1));
+      return styleNet.predict(imgToTensor(combStyleImg1));
     });
 
     reportStatus('Generating 100D style representation of image 2');
     await tf.nextFrame();
     const bottleneck2 = await tf.tidy(() => {
-        return styleNet.predict(imgToTensor(combStyleImg2));
+      return styleNet.predict(imgToTensor(combStyleImg2));
     });
 
     reportStatus('Stylizing image...');
     await tf.nextFrame();
     const combinedBottleneck = await tf.tidy(() => {
-        const scaledBottleneck1 = bottleneck1.mul(tf.scalar(1 - combStyleRatio));
-        const scaledBottleneck2 = bottleneck2.mul(tf.scalar(combStyleRatio));
-        return scaledBottleneck1.addStrict(scaledBottleneck2);
+      const scaledBottleneck1 = bottleneck1.mul(tf.scalar(1 - combStyleRatio));
+      const scaledBottleneck2 = bottleneck2.mul(tf.scalar(combStyleRatio));
+      return scaledBottleneck1.addStrict(scaledBottleneck2);
     });
 
     const stylized = await tf.tidy(() => {
-        return transformNet.predict([imgToTensor(combContentImg), combinedBottleneck]).squeeze();
+      return transformNet.predict([imgToTensor(combContentImg), combinedBottleneck]).squeeze();
     });
 
     await tf.browser.toPixels(stylized, destination);
