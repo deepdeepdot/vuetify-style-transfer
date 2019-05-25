@@ -57,13 +57,16 @@ export default {
     this.privateState.cameraCapture = new CameraCapture(video);
   },
   methods: {
+    reportError(err) {
+      alert(err);
+    },
     async openCameraModal(image) {
       let { cameraCapture } = this.privateState;
       cameraCapture.setImageDestination(image);
       try {
         await cameraCapture.activate();
       } catch (e) {
-        alert("An error occurred: " + e);
+        this.reportError("An error occurred: " + e);
       }
       this.dialog = true;
     },

@@ -165,8 +165,7 @@ const StylizePanelLayout = {
       this.getStyleControl().disableStylizeButtons();
     },
     imageSizeChanged( /* unused: size, idx */) {
-      const styleImgA = this.$refs['styleImgA'];
-      const styleImgB = this.$refs['styleImgB'];
+      const { styleImgA, styleImgB } = this.$refs;
 
       if (styleImgB) {
         // check against half of window.innerWidth
