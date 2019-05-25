@@ -65,6 +65,9 @@ export default {
     }
   },
   methods: {
+    reportError(err) {
+      alert(err);
+    },
     reportStatus(msg) {
       this.stylizeButtonLabel = msg;
     },
@@ -84,48 +87,56 @@ export default {
       this.$refs['modelSelectStyle'].disable = true;
       this.$refs['modelSelectTransformer'].disable = true;
     },
-    initializeModels() {
-      let { loadMobileNetStyleModel, loadSeparableTransformerModel } = this.styleTransfer;
-      this.disableStylizeButtons();
-      return Promise.all([
-        loadMobileNetStyleModel(this.reportStatus),
-        loadSeparableTransformerModel(this.reportStatus),
-      ]).then(() => {
+    async initializeModels() {
+      let { loadMobileNetStyleModel, loadSeparableTransformerModel } = this.styleTransfer,
+          { reportStatus, reportError } = this;
+
+      try {
+        this.disableStylizeButtons();
+        await Promise.all([
+          loadMobileNetStyleModel(reportStatus, reportError),
+          loadSeparableTransformerModel(reportStatus, reportError),
+        ]);
         this.enableStylizeButtons();
-      });
+        this.$emit('modelLoaded');
+      } catch(error) {
+        reportError(error);
+      }
     },
     async loadStyle(event) {
       let type = event.startsWith('[Fast]') ? 'MOBILE_STYLE_NET': 'INCEPTION_STYLE_NET',
-          { loadMobileNetStyleModel, loadInceptionStyleModel} = this.styleTransfer;
+          { loadMobileNetStyleModel, loadInceptionStyleModel } = this.styleTransfer,
+          { reportStatus, reportError } = this;
 
       try {
         this.disableStylizeButtons();
         if (type === 'MOBILE_STYLE_NET') {
-          await loadMobileNetStyleModel(this.reportStatus);
+          await loadMobileNetStyleModel(reportStatus, reportError);
         } else if (type === 'INCEPTION_STYLE_NET') {
-          await loadInceptionStyleModel(this.reportStatus);
+          await loadInceptionStyleModel(reportStatus, reportError);
         }
         this.enableStylizeButtons();
         this.$emit('modelLoaded');
-      } catch (error) {
-        this.reportStatus(error);
+      } catch(error) {
+        reportError(error);
       }
     },
     async loadTransform(event) {
       let type = event.startsWith('[Fast]') ? 'SEPARABLE_TRANSFORM_NET' : 'ORIGINAL_TRANSFORM_NET',
-          { loadOriginalTransformerModel, loadSeparableTransformerModel } = this.styleTransfer;
+          { loadOriginalTransformerModel, loadSeparableTransformerModel } = this.styleTransfer,
+          { reportStatus, reportError } = this;
 
       try {
         this.disableStylizeButtons();
         if (type === 'SEPARABLE_TRANSFORM_NET') {
-          await loadSeparableTransformerModel(this.reportStatus);
+          await loadSeparableTransformerModel(reportStatus, reportError);
         } else if (type === 'ORIGINAL_TRANSFORM_NET') {
-          await loadOriginalTransformerModel(this.reportStatus);
+          await loadOriginalTransformerModel(reportStatus, reportError);
         }
         this.enableStylizeButtons();
         this.$emit('modelLoaded');
-      } catch (error) {
-        this.reportStatus(error);
+      } catch(error) {
+        reportError(error);
       }
     }
   }

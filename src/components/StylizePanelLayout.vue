@@ -157,13 +157,8 @@ const StylizePanelLayout = {
     reportStatus(msg) {
         this.getStyleControl().stylizeButtonLabel = msg;
     },
-    async initializeModels() {
-      try {
-        await this.getStyleControl().initializeModels();
-        this.enableStylizeButtons();
-      } catch(e) {
-        this.reportStatus(e);
-      }
+    initializeModels() {
+      this.getStyleControl().initializeModels();
     },
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';

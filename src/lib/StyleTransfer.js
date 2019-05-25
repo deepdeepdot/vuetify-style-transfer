@@ -13,7 +13,7 @@ import config from '@/config';
 tf.ENV.set('WEBGL_PACK', false);  // This needs to be done otherwise things run very slow v1.0.4
 
 function imgToTensor(img) {
-  if (!img) { alert('imgToTensor: invalid image'); }
+  if (!img) { alert('imgToTensor: missing image'); }
   return tf.browser.fromPixels(img).toFloat().div(tf.scalar(255)).expandDims();
 }
 
@@ -31,7 +31,7 @@ let domain = config['model_domain_url'],
     transformNet = null,
     nets = {};
 
-async function loadModel(type, options, reportMsg) {
+async function loadModel(type, options, reportStatus, reportError) {
   const url = domain + '/' + model[type];
 
   if (!nets[type]) {
@@ -39,13 +39,12 @@ async function loadModel(type, options, reportMsg) {
     for (let i = 0; i < numTrials; i++) {
       try {
         nets[type] = await tf.loadGraphModel(url, options);
-        reportMsg('Loaded... ' + type);
+        reportStatus('Loaded... ' + type);
         break;
-      } catch (error) {
-        alert('loading model error: ' + error);
-        reportMsg('loading model error: ', error);
+      } catch(error) {
+        reportError('loading model error: ' + error);
         if (i === numTrials) {
-          alert('Sorry, we could not load the models, retry the app later');
+          reportError('Sorry, we could not load the models, retry the app later');
         }
       }
     }
@@ -57,41 +56,41 @@ async function loadModel(type, options, reportMsg) {
 const fetchFunc = window.fetch.bind(window);
 
 export default class StyleTransfer {
-  loadMobileNetStyleModel(reportMsg, onProgress) {
+  loadMobileNetStyleModel(reportStatus, reportError, onProgress) {
     return loadModel('MOBILE_STYLE_NET', {
       onProgress,
       fetchFunc,
-    }, reportMsg).then(function(result) {
+    }, reportStatus, reportError).then(function(result) {
         styleNet = result;
         return result;
     });
   }
 
-  loadInceptionStyleModel(reportMsg, onProgress) {
+  loadInceptionStyleModel(reportStatus, reportError, onProgress) {
     return loadModel('INCEPTION_STYLE_NET', {
       onProgress,
       fetchFunc,
-    }, reportMsg).then(function(result) {
+    }, reportStatus, reportError).then(function(result) {
         styleNet = result;
         return result;
     });
   }
 
-  loadOriginalTransformerModel(reportMsg, onProgress) {
+  loadOriginalTransformerModel(reportStatus, reportError, onProgress) {
     return loadModel('ORIGINAL_TRANSFORM_NET', {
       onProgress,
       fetchFunc,
-    }, reportMsg).then(function(result) {
+    }, reportStatus, reportError).then(function(result) {
         transformNet = result;
         return result;
     });
   }
 
-  loadSeparableTransformerModel(reportMsg, onProgress) {
+  loadSeparableTransformerModel(reportStatus, reportError, onProgress) {
     return loadModel('SEPARABLE_TRANSFORM_NET', {
       onProgress,
       fetchFunc,
-    }, reportMsg).then(function(result) {
+    }, reportStatus, reportError).then(function(result) {
         transformNet = result;
         return result;
     });
@@ -192,14 +191,14 @@ export default class StyleTransfer {
   }
 
   async benchmarkStyle(x, styleNet) {
-    let reportMsg = console.log;
+    let reportStatus = console.log;
     const profile = await tf.profile(() => {
       tf.tidy(() => {
         const dummyOut = styleNet.predict(x);
         dummyOut.print();
       });
     });
-    reportMsg(profile);
+    reportStatus(profile);
     const time = await tf.time(() => {
       tf.tidy(() => {
         for (let i = 0; i < 10; i++) {
@@ -208,18 +207,18 @@ export default class StyleTransfer {
         }
       })
     });
-    reportMsg(time);
+    reportStatus(time);
   }
 
   async benchmarkTransform(x, bottleneck, transformNet) {
-    let reportMsg = console.log;
+    let reportStatus = console.log;
     const profile = await tf.profile(() => {
       tf.tidy(() => {
         const dummyOut = transformNet.predict([x, bottleneck]);
         dummyOut.print();
       });
     });
-    reportMsg(profile);
+    reportStatus(profile);
     const time = await tf.time(() => {
       tf.tidy(() => {
         for (let i = 0; i < 10; i++) {
@@ -228,6 +227,6 @@ export default class StyleTransfer {
         }
       })
     });
-    reportMsg(time);
+    reportStatus(time);
   }
 */
