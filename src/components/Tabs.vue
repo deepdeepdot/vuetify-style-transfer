@@ -45,7 +45,7 @@
       styleTransfer: Object
     },
     components: {
-        StylizePanelLayout
+      StylizePanelLayout
     },
   }
 </script>

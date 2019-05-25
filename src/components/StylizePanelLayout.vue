@@ -154,7 +154,7 @@ const StylizePanelLayout = {
       return this.$refs['styleControl'];
     },
     reportStatus(msg) {
-        this.getStyleControl().stylizeButtonLabel = msg;
+      this.getStyleControl().stylizeButtonLabel = msg;
     },
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
