@@ -251,7 +251,7 @@ const StylizePanelLayout = {
           reportStatus,
         };
         this.disableStylizeButtons();
-        this.styleTransfer.startCombining(params);
+        await this.styleTransfer.startCombining(params);
         this.enableStylizeButtons();
       }
     }
