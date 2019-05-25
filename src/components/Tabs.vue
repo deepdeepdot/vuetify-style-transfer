@@ -47,7 +47,7 @@
     components: {
         StylizePanelLayout,
     },
-    async mounted() {
+    mounted() {
       this.$refs['stylePanel1'].initializeModels();
     },
   }
