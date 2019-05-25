@@ -184,13 +184,16 @@ const StylizePanelLayout = {
     };
   },
   methods: {
+    getStyleControl() {
+      return this.$refs['styleControl'];
+    },
     reportStatus(msg) {
-        this.$refs['styleControl'].stylizeButtonLabel = msg;
+        this.getStyleControl().stylizeButtonLabel = msg;
     },
     async initializeModels() {
       try {
-        await this.$refs['styleControl'].initializeModels();
-        this.$emit('modelLoaded');
+        await this.getStyleControl().initializeModels();
+        this.enableStylizeButtons();
       } catch(e) {
         this.reportStatus(e);
       }
@@ -198,10 +201,10 @@ const StylizePanelLayout = {
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
       this.reportStatus(readyMsg);
-      this.$refs['styleControl'].enableStylizeButtons();
+      this.getStyleControl().enableStylizeButtons();
     },
     disableStylizeButtons() {
-      this.$refs['styleControl'].disableStylizeButtons();
+      this.getStyleControl().disableStylizeButtons();
     },
     imageSizeChanged( /* unused: size, idx */) {
       const styleImgA = this.$refs['styleImgA'];
