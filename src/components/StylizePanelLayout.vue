@@ -6,7 +6,7 @@
           <ImageInput
             ref="styleImgA"
             sliderLabel="Style image A size"
-            imgUrl="/images/stripes.jpg"
+            :imgUrl="twoStyles? '/images/seaport.jpg' : '/images/stripes.jpg'"
             :options="styleOptions"
             @imageSelected="updateImageSource($event, 0)"
             @imageSizeChanged="imageSizeChanged($event, 0)"
