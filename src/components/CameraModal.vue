@@ -43,20 +43,22 @@
 
 import CameraCapture from '@/lib/CameraCapture';
 
-let cameraCapture; // singleton
-
 export default {
   data () {
     return {
-      dialog: false
+      dialog: false,
+      privateState: {
+        cameraCapture: null,
+      }
     }
+  },
+  mounted() {
+    let video = this.$refs['webcam-video'];
+    this.privateState.cameraCapture = new CameraCapture(video);
   },
   methods: {
     async openCameraModal(image) {
-      if (!cameraCapture) {
-        let video = this.$refs['webcam-video'];
-        cameraCapture = new CameraCapture(video);
-      }
+      let { cameraCapture } = this.privateState;
       cameraCapture.setImageDestination(image);
       try {
         await cameraCapture.activate();
@@ -66,7 +68,7 @@ export default {
       this.dialog = true;
     },
     async snap() {
-      if (!cameraCapture) return;
+      let { cameraCapture } = this.privateState;
       cameraCapture.captureImageFromCamera();
       setTimeout(() => {
         this.dialog = false;
@@ -75,7 +77,7 @@ export default {
   },
   watch: {
     dialog(show /*, oldValue */) {
-      if (!cameraCapture) return;
+      let { cameraCapture } = this.privateState;
       if (!show) {
         cameraCapture.deactivate();
       }
