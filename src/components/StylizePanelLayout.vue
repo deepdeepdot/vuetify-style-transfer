@@ -8,10 +8,10 @@
             sliderLabel="Style image A size"
             :imgUrl="twoStyles? '/images/seaport.jpg' : '/images/stripes.jpg'"
             :options="styleOptions"
+            :resetSelectedOptions="resetOptions"
+            :showForceSquare="twoStyles"
             @imageSelected="updateImageSource($event, 0)"
             @imageSizeChanged="imageSizeChanged($event, 0)"
-            :showForceSquare="twoStyles"
-            :resetSelectedOptions="resetOptions"
           />
         </v-flex>
 
@@ -21,10 +21,10 @@
             sliderLabel="Style image B size"
             imgUrl="/images/clouds.jpg"
             :options="styleOptions"
+            :resetSelectedOptions="resetOptions"
+            :showForceSquare="twoStyles"
             @imageSelected="updateImageSource($event, 1)"
             @imageSizeChanged="imageSizeChanged($event, 1)"
-            :showForceSquare="twoStyles"
-            :resetSelectedOptions="resetOptions"
           />
         </v-flex>
 
@@ -35,11 +35,11 @@
                 <ImageInput
                   ref="contentImg"
                   sliderLabel="Content image size"
-                  imgUrl="/images/chicago.jpg"
+                  :imgUrl="twoStyles? '/images/chicago.jpg' : '/images/statue_of_liberty.jpg'"
                   :options="contentOptions"
-                  @imageSelected="updateImageSource($event, 2)"
-                  :showForceSquare="twoStyles"
                   :resetSelectedOptions="resetOptions"
+                  :showForceSquare="twoStyles"
+                  @imageSelected="updateImageSource($event, 2)"
                 />
               </v-card>
             </v-flex>
@@ -58,11 +58,11 @@
               <v-card color>
                 <StylizeControl
                   ref="styleControl"
-                  :styleTransfer="styleTransfer"
-                  :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
                   sliderLabel="Stylization Ratio"
-                  @styleAction="transferStyle"
+                  :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
+                  :styleTransfer="styleTransfer"
                   @modelLoaded="enableStylizeButtons"
+                  @styleAction="transferStyle"
                 />
               </v-card>
             </v-flex>
@@ -76,16 +76,16 @@
         </v-flex>
         <input
           type="file"
-          ref="select-file"
           accept="image/x-png, image/gif, image/jpeg"
           class="invisible"
+          ref="select-file"
         />
         <input
           type="file"
-          ref="shoot-photo"
           accept="image/*"
           capture="camera"
           class="invisible"
+          ref="shoot-photo"
         />
       </v-layout>
     </v-container>
@@ -105,12 +105,12 @@ import {
 
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
-const StylizePanelLayout = {
+export default {
   name: 'StylizePanelLayout',
   components: {
+    CameraModal,
     ImageInput,
     StylizeControl,
-    CameraModal
   },
   props: {
     twoStyles: Boolean,
@@ -135,7 +135,7 @@ const StylizePanelLayout = {
         'sketch',
         'seaport',
         'red_circles',
-        'zigzag'
+        'zigzag',
       ],
       contentOptions: [
         'Take a picture',
@@ -145,7 +145,7 @@ const StylizePanelLayout = {
         'golden_gate',
         'beach',
         'chicago',
-        'statue_of_liberty'
+        'statue_of_liberty',
       ],
     };
   },
@@ -168,9 +168,9 @@ const StylizePanelLayout = {
       const { styleImgA, styleImgB } = this.$refs;
 
       if (styleImgB) {
+        // TODO: revisit design for UI interaction
         // check against half of window.innerWidth
         // And/or the sum of both (up to some min: 350px)
-
         // Simpler to test:
         this.canFitInSingleRow = styleImgA.slider < 450 && styleImgB.slider < 450;
         // It does the trick, but the jumping and "out of sync" dragging is not nice
@@ -211,8 +211,8 @@ const StylizePanelLayout = {
     },
     async transferStyle() {
       let refs = this.$refs,
-          styleImgA = refs['styleImgA'].$refs['image'],
           contentImg = refs['contentImg'].$refs['image'],
+          styleImgA = refs['styleImgA'].$refs['image'],
           slider = refs['styleControl'].$refs['slider'],
           styleRatio = slider.value ? slider.value / 100 : 1,
           params;
@@ -249,8 +249,6 @@ const StylizePanelLayout = {
     }
   }
 };
-
-export default StylizePanelLayout;
 
 </script>
 
