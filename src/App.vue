@@ -12,7 +12,7 @@
     </v-toolbar>
 
     <v-content>
-      <Tabs ref="tabs" :styleTransfer="styleTransfer"/>
+      <Tabs ref="tabs"/>
     </v-content>
   </v-app>
 </template>
@@ -26,15 +26,20 @@ export default {
   components: {
     Tabs,
   },
-  data() {
-    return {
-      styleTransfer: new StyleTransfer()
-    };
-  },
   mounted() {
-    let styleControl = this.$refs['tabs']
-                           .$refs['stylePanel1']
-                           .$refs['styleControl'];
+    let tabs = this.$refs['tabs'],
+        { stylePanel1 } = tabs.$refs,
+        { stylePanel2 } = tabs.$refs;
+
+    let styleTransfer = new StyleTransfer();
+
+    let { styleControl: styleControl2 } = stylePanel2.$refs;
+    styleControl2.styleTransfer = styleTransfer;
+    stylePanel2.styleTransfer = styleTransfer;
+
+    let { styleControl } = stylePanel1.$refs;
+    stylePanel1.styleTransfer = styleTransfer;
+    styleControl.styleTransfer = styleTransfer;
     styleControl.initializeModels();
   },
 };

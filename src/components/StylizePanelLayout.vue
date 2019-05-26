@@ -60,7 +60,6 @@
                   ref="styleControl"
                   sliderLabel="Stylization Ratio"
                   :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
-                  :styleTransfer="styleTransfer"
                   @modelLoaded="enableStylizeButtons"
                   @styleAction="transferStyle"
                 />
@@ -115,10 +114,10 @@ export default {
   },
   props: {
     twoStyles: Boolean,
-    styleTransfer: Object
   },
   data() {
     return {
+      styleTransfer: null,
       canFitInSingleRow: true,
       resetOptions: [
         'Random image from wikiart.org',

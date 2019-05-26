@@ -47,7 +47,6 @@ export default {
   props: {
     buttonLabel: String,
     sliderLabel: String,
-    styleTransfer: Object,
   },
   data() {
     return {
@@ -57,6 +56,7 @@ export default {
       transform: "[Fast] (2.4MB) Separable_conv2d transformer",
       styleOptions: ["[Fast] (9.6MB) Distilled MobileNet style model", "[High quality] (36.3MB) Original Inceptionv3 style model"],
       transformOptions: ["[Fast] (2.4MB) Separable_conv2d transformer", "[High quality] (7.9MB) Original transformer model"],
+      styleTransfer: null,
     };
   },
   computed: {
