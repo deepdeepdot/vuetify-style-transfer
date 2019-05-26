@@ -2,6 +2,7 @@
   <div>
     <v-tabs
       grow
+      color="lightBackground"
     >
       <v-tab :key="1" ripple>
         Stylize an image

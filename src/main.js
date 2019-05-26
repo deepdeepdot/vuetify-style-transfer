@@ -14,7 +14,8 @@ Vue.use(Vuetify, {
     error: '#f44336',
     warning: '#2196f3',
     info: '#3f51b5',
-    success: '#00bcd4'
+    success: '#00bcd4',
+    lightBackground: '#eec'
   },
   iconfont: 'md',
 })
