@@ -26,9 +26,9 @@
                       <v-flex>
                       <v-slider
                           v-model='slider'
-                          :label='sliderLabel'
                           min=100
                           max=500
+                          :label='sliderLabel'
                       ></v-slider>
                       </v-flex>
 
@@ -48,10 +48,10 @@
 
                   <v-flex xs12>
                     <v-select
-                      v-model="selected"
-                      @change='setSelectedImage($event)'
-                      :items='getItemsForSelect'
                       label='Select content'
+                      v-model="selected"
+                      :items='contentSourceOptions'
+                      @change='setSelectedImage($event)'
                     >
                     </v-select>
                   </v-flex>
@@ -92,7 +92,7 @@ export default {
     this.updateImageSize();
   },
   computed: {
-    getItemsForSelect() {
+    contentSourceOptions() {
       return this.options.map((id) => ({
         value: id,
         text: idToLabel(id)
@@ -146,19 +146,10 @@ export default {
 
 <style>
 
-.filler {
-  display: block;
-  height: 30px !important;
-}
-
 .image-controls .container {
   max-width: 500px;
 }
 
-/*
-.image-controls .container,
-.image-controls .container .layout,
-*/
 .image-controls .container .layout .flex,
 .image-controls .container .layout .flex > div
 {

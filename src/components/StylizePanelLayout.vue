@@ -11,7 +11,7 @@
             :resetSelectedOptions="resetOptions"
             :showForceSquare="twoStyles"
             @imageSelected="updateImageSource($event, 0)"
-            @imageSizeChanged="imageSizeChanged($event, 0)"
+            @imageSizeChanged="imageSizeChanged"
           />
         </v-flex>
 
@@ -24,7 +24,7 @@
             :resetSelectedOptions="resetOptions"
             :showForceSquare="twoStyles"
             @imageSelected="updateImageSource($event, 1)"
-            @imageSizeChanged="imageSizeChanged($event, 1)"
+            @imageSizeChanged="imageSizeChanged"
           />
         </v-flex>
 
@@ -94,14 +94,15 @@
 </template>
 
 <script>
+import CameraModal from './CameraModal';
 import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
-import CameraModal from './CameraModal';
-import links from './links';
 import {
   loadImageFromFile,
   loadImageFromFileSelect
 } from '@/lib/ImageUtils';
+
+import links from './links';
 
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
@@ -164,16 +165,16 @@ export default {
     disableStylizeButtons() {
       this.getStyleControl().disableStylizeButtons();
     },
-    imageSizeChanged( /* unused: size, idx */) {
+    imageSizeChanged() {
       const { styleImgA, styleImgB } = this.$refs;
 
       if (styleImgB) {
-        // TODO: revisit design for UI interaction
+        // TODO: revisit design for UI/UX interaction
         // check against half of window.innerWidth
         // And/or the sum of both (up to some min: 350px)
         // Simpler to test:
         this.canFitInSingleRow = styleImgA.slider < 450 && styleImgB.slider < 450;
-        // It does the trick, but the jumping and "out of sync" dragging is not nice
+        // UX: It does the trick, but the jumping and "out of sync" dragging is not nice
       }
     },
     updateImageSource(selected, idx) {
