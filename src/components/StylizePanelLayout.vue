@@ -102,7 +102,7 @@ import {
   loadImageFromFileSelect
 } from '@/lib/ImageUtils';
 
-import links from './links';
+import links from '@/data/links';
 
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
