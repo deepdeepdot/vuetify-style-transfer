@@ -47,21 +47,19 @@ export default {
   data () {
     return {
       dialog: false,
-      privateState: {
-        cameraCapture: null,
-      }
+      cameraCapture: null,
     }
   },
   mounted() {
     let video = this.$refs['webcam-video'];
-    this.privateState.cameraCapture = new CameraCapture(video);
+    this.cameraCapture = new CameraCapture(video);
   },
   methods: {
     reportError(err) {
       alert(err);
     },
     async openCameraModal(image) {
-      let { cameraCapture } = this.privateState;
+      let { cameraCapture } = this;
       cameraCapture.setImageDestination(image);
       try {
         await cameraCapture.activate();
@@ -71,8 +69,7 @@ export default {
       this.dialog = true;
     },
     snap() {
-      let { cameraCapture } = this.privateState;
-      cameraCapture.captureImageFromCamera();
+      this.cameraCapture.captureImageFromCamera();
       setTimeout(() => {
         this.dialog = false;
       }, 300);
@@ -80,9 +77,8 @@ export default {
   },
   watch: {
     dialog(show /*, oldValue */) {
-      let { cameraCapture } = this.privateState;
       if (!show) {
-        cameraCapture.deactivate();
+        this.cameraCapture.deactivate();
       }
     }
   }
