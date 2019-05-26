@@ -35,7 +35,7 @@
                 <ImageInput
                   ref="contentImg"
                   sliderLabel="Content image size"
-                  :imgUrl="twoStyles? '/images/chicago.jpg' : '/images/statue_of_liberty.jpg'"
+                  :imgUrl="twoStyles? '/images/statue_of_liberty.jpg' : '/images/chicago.jpg'"
                   :options="contentOptions"
                   :resetSelectedOptions="resetOptions"
                   :showForceSquare="twoStyles"
