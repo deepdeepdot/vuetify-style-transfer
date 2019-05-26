@@ -97,17 +97,8 @@ video {
   margin: auto;
 }
 
-.filler {
-  display: block;
-  height: 20px;
-}
-
-.centered {
-  text-align: center;
-}
-
 .centered > * {
-  display: inline-block;
+  display: flex;
 }
 
 </style>

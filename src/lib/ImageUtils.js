@@ -39,5 +39,4 @@ function loadImageFromFileSelect(image, fileSelect, resize) {
 export {
   loadImageFromFile,
   loadImageFromFileSelect,
-  resizeImageToDestination
 };
