@@ -247,7 +247,7 @@ export default {
 
 .stylize-panel-layout-filler {
   display: block;
-  height: 50px important!;
+  height: 80px;
 }
 
 .invisible {
