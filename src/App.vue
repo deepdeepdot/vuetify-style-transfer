@@ -27,11 +27,11 @@ export default {
     Tabs,
   },
   mounted() {
+    let styleTransfer = new StyleTransfer();
+
     let tabs = this.$refs['tabs'],
         { stylePanel1 } = tabs.$refs,
         { stylePanel2 } = tabs.$refs;
-
-    let styleTransfer = new StyleTransfer();
 
     let { styleControl: styleControl2 } = stylePanel2.$refs;
     styleControl2.styleTransfer = styleTransfer;
