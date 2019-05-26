@@ -2,6 +2,7 @@
 node_modules
 /dist
 /models
+sample-test
 
 # local env files
 .env.local
