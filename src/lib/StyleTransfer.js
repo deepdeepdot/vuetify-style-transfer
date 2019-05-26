@@ -1,6 +1,3 @@
-/* eslint-disable one-var */
-/* eslint-disable max-len */
-/* eslint-disable require-jsdoc */
 /*
  * StyleTransfer
  */

@@ -69,7 +69,7 @@
 
 function idToLabel(id) {
   return id.split('_').map(
-    (word) => word[0].toUpperCase() + word.substr(1)
+    word => word[0].toUpperCase() + word.substr(1)
   ).join(' ');
 }
 
@@ -77,20 +77,20 @@ const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini
 
 export default {
   props: {
-    sliderLabel: String,
     imgUrl: String,
     options: Array,
-    showForceSquare: Boolean,
     resetSelectedOptions: Array,
+    showForceSquare: Boolean,
+    sliderLabel: String,
   },
+  data: () => ({
+    checkbox: false,
+    selected: null,
+    slider: 320,
+  }),
   mounted() {
     this.updateImageSize();
   },
-  data: () => ({
-    slider: 320,
-    selected: null,
-    checkbox: false,
-  }),
   computed: {
     getItemsForSelect() {
       return this.options.map((id) => ({

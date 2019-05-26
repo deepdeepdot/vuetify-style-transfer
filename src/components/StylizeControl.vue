@@ -45,8 +45,8 @@
 export default {
   name: "StylizeControl",
   props: {
-    sliderLabel: String,
     buttonLabel: String,
+    sliderLabel: String,
     styleTransfer: Object,
   },
   data() {
