@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "surge-deploy": "npm run build && cp CORS dist && cp CNAME dist && cd dist && surge"
+    "cp-surge-files": "cp CORS dist && cp CNAME dist",
+    "surge-deploy": "npm run build && npm run cp-surge-files && cd dist && surge"
   },
   "dependencies": {
     "core-js": "^2.6.5",
