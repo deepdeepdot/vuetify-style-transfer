@@ -40,7 +40,7 @@ export default class CameraCapture {
 
 function capture(video, image) {
   if (!video || !image) {
-    throw new Error("Camera capture(video, image) missing args");
+    throw new Error("CameraCapture.capture(video, image) missing args");
   }
   let canvas = document.createElement("canvas");
   canvas.width = video.width;

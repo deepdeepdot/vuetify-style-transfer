@@ -18,14 +18,8 @@
 </template>
 
 <script>
-// import Cards from "./test/Cards";
-// import GridLayout from "./test/GridLayout";
-// import Tooltips from "./test/Tooltips";
-// import StylizePanelLayout from "./components/StylizePanelLayout";
-// import StylizeControl from "./components/StylizeControl";
 import Tabs from "./components/Tabs";
-
-import StyleTransfer from '@/lib/StyleTransfer';
+import StyleTransfer from './lib/StyleTransfer';
 
 export default {
   name: "App",

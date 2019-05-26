@@ -179,8 +179,8 @@ const StylizePanelLayout = {
     updateImageSource(selected, idx) {
       let mapping = ['styleImgA', 'styleImgB', 'contentImg'],
           image = this.$refs[mapping[idx]].$refs['image'],
-          fileSelect,
-          randomNumber;
+          randomNumber,
+          fileSelect;
 
       image.crossOrigin = 'Anonymous'; // for tensorflow
 

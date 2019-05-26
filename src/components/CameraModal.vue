@@ -70,7 +70,7 @@ export default {
       }
       this.dialog = true;
     },
-    async snap() {
+    snap() {
       let { cameraCapture } = this.privateState;
       cameraCapture.captureImageFromCamera();
       setTimeout(() => {
