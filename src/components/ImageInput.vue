@@ -6,8 +6,9 @@
         <v-layout row justify-center>
           <v-flex xs12>
             <v-layout row justify-center>
-              <img ref='image'
-                    :src='imgUrl'
+              <img
+                ref='image'
+                :src='imgUrl'
               >
             </v-layout>
           </v-flex>

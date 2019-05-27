@@ -1,3 +1,10 @@
+function createDownloadLink(dataUrl, filename) {
+  let a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = filename;
+  return a;
+}
+
 function resizeImageToDestination(source, { width, height, destination }) {
   let ratio = source.width / source.height;
   // alert(ratio + "/" + source.width + "/" + source.height);
@@ -13,7 +20,7 @@ function resizeImageToDestination(source, { width, height, destination }) {
 
   let ctx = resizedCanvas.getContext("2d");
   ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, width, height);
-  destination.src = resizedCanvas.toDataURL();
+  destination.src = resizedCanvas.toDataURL('image/png');
 }
 
 function loadImageFromFile(file, image, resize) {
@@ -39,4 +46,5 @@ function loadImageFromFileSelect(image, fileSelect, resize) {
 export {
   loadImageFromFile,
   loadImageFromFileSelect,
+  createDownloadLink,
 };

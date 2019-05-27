@@ -30,8 +30,7 @@ export default {
     let styleTransfer = new StyleTransfer();
 
     let tabs = this.$refs['tabs'],
-        { stylePanel1 } = tabs.$refs,
-        { stylePanel2 } = tabs.$refs;
+        { stylePanel1, stylePanel2 } = tabs.$refs;
 
     let { styleControl: styleControl2 } = stylePanel2.$refs;
     styleControl2.styleTransfer = styleTransfer;

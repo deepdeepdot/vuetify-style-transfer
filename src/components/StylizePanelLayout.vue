@@ -48,6 +48,11 @@
             <canvas ref="canvas" id="canvas-single" width="400px" height="200px"></canvas>
           </v-layout>
         </v-flex>
+        <v-flex v-if="stylized" d-flex xs12>
+          <v-layout row justify-center>
+            <v-btn color="pink" dark @click="download">Download</v-btn>
+          </v-layout>
+        </v-flex>
 
         <v-flex d-flex xs12>
           <v-layout row justify-center>
@@ -95,7 +100,8 @@ import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
 import {
   loadImageFromFile,
-  loadImageFromFileSelect
+  loadImageFromFileSelect,
+  createDownloadLink,
 } from '@/lib/ImageUtils';
 import links from '@/data/links';
 
@@ -115,6 +121,7 @@ export default {
     return {
       styleTransfer: null,
       canFitInSingleRow: true,
+      stylized: false,
       styleOptions: [
         'Select from file',
         'Random image from wikiart.org',
@@ -140,12 +147,19 @@ export default {
       ],
     };
   },
+  mounted() {
+  },
   methods: {
     getStyleControl() {
       return this.$refs['styleControl'];
     },
     reportStatus(msg) {
       this.getStyleControl().stylizeButtonLabel = msg;
+    },
+    download() {
+      let dataUrl = this.$refs['canvas'].toDataURL('image/png');
+      let link = createDownloadLink(dataUrl, 'sample.png');
+      link.click();
     },
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
@@ -221,6 +235,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startStyling(params);
+        this.stylized = true;
         this.enableStylizeButtons();
       }
       else {
@@ -235,6 +250,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startCombining(params);
+        this.stylized = true;
         this.enableStylizeButtons();
       }
     }
