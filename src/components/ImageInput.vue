@@ -50,7 +50,7 @@
                     <v-select
                       label='Select content'
                       v-model="selected"
-                      :items='contentSourceOptions'
+                      :items='sourceOptions'
                       @change='setSelectedImage($event)'
                     >
                     </v-select>
@@ -91,7 +91,7 @@ export default {
     this.updateImageSize();
   },
   computed: {
-    contentSourceOptions() {
+    sourceOptions() {
       return this.options.map((id) => ({
         value: id,
         text: idToLabel(id)
