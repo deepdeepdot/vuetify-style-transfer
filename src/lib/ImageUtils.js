@@ -13,6 +13,17 @@ function resizeImageToDestination(source, { width, height, destination }, srcOri
   height = height || (width && width / ratio) || source.height;
 
   let resizedCanvas = document.createElement("canvas");
+  resizeCanvas(resizedCanvas, width, height, srcOrientation);
+
+  let ctx = resizedCanvas.getContext("2d");
+  transformContext(ctx, width, height, srcOrientation);
+
+  ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, width, height);
+  destination.src = resizedCanvas.toDataURL('image/png');
+}
+
+function resizeCanvas(resizedCanvas, width, height, srcOrientation) {
+  // See: https://stackoverflow.com/questions/20600800/js-client-side-exif-orientation-rotate-and-mirror-jpeg-images
   let flip = srcOrientation && 4 < srcOrientation && srcOrientation < 9;
   if (flip) {
     resizedCanvas.width = height;
@@ -21,8 +32,9 @@ function resizeImageToDestination(source, { width, height, destination }, srcOri
     resizedCanvas.width = width;
     resizedCanvas.height = height;
   }
-  let ctx = resizedCanvas.getContext("2d");
+}
 
+function transformContext(ctx, width, height, srcOrientation) {
   // See: https://stackoverflow.com/questions/20600800/js-client-side-exif-orientation-rotate-and-mirror-jpeg-images
   // transform context before drawing image
   switch (srcOrientation) {
@@ -35,8 +47,6 @@ function resizeImageToDestination(source, { width, height, destination }, srcOri
     case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
     default: break;
   }
-  ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, width, height);
-  destination.src = resizedCanvas.toDataURL('image/png');
 }
 
 function loadImageFromFile(file, image, resize, srcOrientation = null) {
