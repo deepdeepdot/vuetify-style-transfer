@@ -17,7 +17,7 @@
               <v-layout row wrap>
 
                 <v-flex xs12 class="centered">
-                    <video ref="webcam-video" width="500" height="375"></video>
+                    <video ref="webcam-video" class="flipped" width="500" height="375"></video>
                 </v-flex>
 
                 <v-flex xs12>
@@ -91,6 +91,14 @@ export default {
 video {
   border: 2px solid lime;
   margin: auto;
+}
+
+video.flipped {
+  /*
+   * html5 video looks flipped by default, so let's reverse it with a transform
+   * Make sure to flip the captured image as well
+   */
+  transform: scale(-1, 1);
 }
 
 .centered > * {

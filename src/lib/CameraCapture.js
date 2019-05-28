@@ -38,7 +38,7 @@ export default class CameraCapture {
   }
 }
 
-function capture(video, image) {
+function capture(video, image, flip=true) {
   if (!video || !image) {
     throw new Error("CameraCapture.capture(video, image) missing args");
   }
@@ -47,6 +47,10 @@ function capture(video, image) {
   canvas.height = video.height;
   let ctx = canvas.getContext("2d");
 
+  if (flip) {
+    // HTML5 video by default likes to show flipped horizontally
+    ctx.transform(-1, 0, 0, 1, video.width, 0); // Flip like a mirror
+  }
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
   let imageDataURL = canvas.toDataURL("image/png");
   image.crossOrigin = "anonymous";
