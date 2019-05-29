@@ -5,14 +5,14 @@ function createDownloadLink(dataUrl, filename) {
   return a;
 }
 
-function loadImageFromFileInput(fileSelect, image, resize) {
-  fileSelect.onchange = evt => {
+function loadImageFromFileInput(fileInput, image, resize) {
+  fileInput.onchange = evt => {
     let file = evt.target.files[0];
     getOrientation(file, function(srcOrientation) {
       loadImageFromFile(file, image, resize, srcOrientation);
     });
   };
-  fileSelect.click();
+  fileInput.click();
 }
 
 function loadImageFromFile(file, image, resize, srcOrientation = null) {
@@ -76,7 +76,7 @@ function transformContext(ctx, width, height, srcOrientation) {
 }
 
 /*
- * getOrientation()
+ * getOrientation(file, callback)
  * - Get EXIF orientation from a JPEG file
  * https://stackoverflow.com/questions/7584794/accessing-jpeg-exif-rotation-data-in-javascript-on-the-client-side/32490603#32490603
  */

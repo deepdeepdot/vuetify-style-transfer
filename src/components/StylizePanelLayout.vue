@@ -193,7 +193,6 @@ export default {
           if (isMobile) {
             let shootPhoto = this.$refs['shoot-photo'];
             loadImageFromFileInput(shootPhoto, image, {width:320});
-            shootPhoto.click();
           } else {
             this.$refs['modal-camera'].openCameraModal(image);
           }
