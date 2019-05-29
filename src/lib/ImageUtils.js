@@ -50,9 +50,9 @@ function transformContext(ctx, width, height, srcOrientation) {
 }
 
 function loadImageFromFile(file, image, resize, srcOrientation = null) {
-  const fileReader = new FileReader();
+  let fileReader = new FileReader();
   fileReader.onload = function(e) {
-    const largeImage = new Image();
+    let largeImage = new Image();
     largeImage.src = e.target.result;
     largeImage.onload = function() {
       resizeImageToDestination(
