@@ -15,7 +15,7 @@ function loadImageFromFileInput(fileInput, image, resize) {
   fileInput.click();
 }
 
-function loadImageFromFile(file, image, resize, srcOrientation = null) {
+function loadImageFromFile(file, image, resize, srcOrientation) {
   let fileReader = new FileReader();
   fileReader.onload = function(e) {
     let largeImage = new Image();
