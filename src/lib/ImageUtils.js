@@ -65,7 +65,7 @@ function loadImageFromFile(file, image, resize, srcOrientation = null) {
   fileReader.readAsDataURL(file);
 }
 
-function loadImageFromFileSelect(image, fileSelect, resize) {
+function loadImageFromFileInput(fileSelect, image, resize) {
   fileSelect.onchange = evt => {
     let file = evt.target.files[0];
     getOrientation(file, function(srcOrientation) {
@@ -118,7 +118,6 @@ function getOrientation(file, callback) {
 }
 
 export {
-  loadImageFromFile,
-  loadImageFromFileSelect,
+  loadImageFromFileInput,
   createDownloadLink,
 };

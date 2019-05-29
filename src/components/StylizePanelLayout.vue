@@ -99,8 +99,7 @@ import CameraModal from './CameraModal';
 import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
 import {
-  loadImageFromFile,
-  loadImageFromFileSelect,
+  loadImageFromFileInput,
   createDownloadLink,
 } from '@/lib/ImageUtils';
 import links from '@/data/links';
@@ -193,10 +192,7 @@ export default {
         case 'Take a picture':
           if (isMobile) {
             let shootPhoto = this.$refs['shoot-photo'];
-            shootPhoto.onchange = function shootPhoto(evt) {
-              let { files } = evt.target;
-              loadImageFromFile(files[0], image, { width: 320 });
-            };
+            loadImageFromFileInput(shootPhoto, image, {width:320});
             shootPhoto.click();
           } else {
             this.$refs['modal-camera'].openCameraModal(image);
@@ -204,7 +200,7 @@ export default {
           break;
         case 'Select from file':
           fileSelect = this.$refs['select-file'];
-          loadImageFromFileSelect(image, fileSelect, isMobile? {width: 320}:null);
+          loadImageFromFileInput(fileSelect, image, isMobile? {width: 320}:null);
           break;
         case 'Random image from wikiart.org':
           randomNumber = Math.floor(Math.random() * links.length);
