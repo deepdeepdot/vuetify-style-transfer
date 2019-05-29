@@ -5,6 +5,32 @@ function createDownloadLink(dataUrl, filename) {
   return a;
 }
 
+function loadImageFromFileInput(fileSelect, image, resize) {
+  fileSelect.onchange = evt => {
+    let file = evt.target.files[0];
+    getOrientation(file, function(srcOrientation) {
+      loadImageFromFile(file, image, resize, srcOrientation);
+    });
+  };
+  fileSelect.click();
+}
+
+function loadImageFromFile(file, image, resize, srcOrientation = null) {
+  let fileReader = new FileReader();
+  fileReader.onload = function(e) {
+    let largeImage = new Image();
+    largeImage.src = e.target.result;
+    largeImage.onload = function() {
+      resizeImageToDestination(
+        largeImage,
+        { ...resize, destination: image },
+        srcOrientation
+      );
+    };
+  };
+  fileReader.readAsDataURL(file);
+}
+
 function resizeImageToDestination(source, { width, height, destination }, srcOrientation) {
   let ratio = source.width / source.height;
 
@@ -47,32 +73,6 @@ function transformContext(ctx, width, height, srcOrientation) {
     case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
     default: break;
   }
-}
-
-function loadImageFromFile(file, image, resize, srcOrientation = null) {
-  let fileReader = new FileReader();
-  fileReader.onload = function(e) {
-    let largeImage = new Image();
-    largeImage.src = e.target.result;
-    largeImage.onload = function() {
-      resizeImageToDestination(
-        largeImage,
-        { ...resize, destination: image },
-        srcOrientation
-      );
-    };
-  };
-  fileReader.readAsDataURL(file);
-}
-
-function loadImageFromFileInput(fileSelect, image, resize) {
-  fileSelect.onchange = evt => {
-    let file = evt.target.files[0];
-    getOrientation(file, function(srcOrientation) {
-      loadImageFromFile(file, image, resize, srcOrientation);
-    });
-  };
-  fileSelect.click();
 }
 
 /*
@@ -118,6 +118,6 @@ function getOrientation(file, callback) {
 }
 
 export {
-  loadImageFromFileInput,
   createDownloadLink,
+  loadImageFromFileInput,
 };
