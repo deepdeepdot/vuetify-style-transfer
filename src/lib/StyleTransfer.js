@@ -41,7 +41,7 @@ async function loadModel(type, options, reportStatus, reportError) {
       } catch(error) {
         reportError('loading model error: ' + error);
         if (i === numTrials) {
-          reportError('Sorry, we could not load the models, retry the app later');
+          reportError('Sorry, we could not load the models, restart the browser or restart your phone');
         }
       }
     }
