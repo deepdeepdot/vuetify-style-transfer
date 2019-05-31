@@ -39,13 +39,22 @@ App -> Tabs -> StylizePanelLayout -> ImageInput
                                   -> StylizeControl
 ```
 
+### Emitted Events
+
+ImageInput -> imageSizeChanged -> StylizePanelLayout
+           -> imageSelected    -> StylizePanelLayout
+
+StylizedControl -> styleAction -> StylizePanelLayout
+                -> modelLoaded -> StylizePanelLayout
+
+
 ### Utilities in /lib
 The lib folder contains three utility classes
-* CameraCapture: handles camera capture for desktop and laptops, for mobile we use `<input capture="camera">`
-* ImageUtils: 
+* `CameraCapture`: handles camera capture for desktop and laptops, for mobile we use `<input capture="camera">`
+* `ImageUtils`: 
   - `createDownloadLink(dataUrl, filename)`: creates the link to save an image
   - `loadImageFromFileInput(fileInput, image, sizeOptions)`: reads a file into an image
-* StyleTransfer: loads tensorflow models and executes style transfer using Tensorflow.js
+* `StyleTransfer`: loads tensorflow models and executes style transfer using Tensorflow.js
 
 
 ## Project setup
