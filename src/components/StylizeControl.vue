@@ -91,7 +91,6 @@ export default {
     }
   },
   mounted() {
-    alert('disabled!');
     this.disableStylizeButtons();
   },
   methods: {
@@ -104,9 +103,9 @@ export default {
     styleAction() {
       this.$emit('styleAction');
     },
-    randomize() {
-      alert('not implemented');
-    },
+    // randomize() {
+    //   alert('not implemented');
+    // },
     enableStylizeButtons() {
       this.$refs['styleButton'].disable = false;
       this.$refs['modelSelectStyle'].disable = false;
