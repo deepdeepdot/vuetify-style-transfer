@@ -4,35 +4,55 @@
 
       <v-layout row>
         <v-slider
+          thumb-label
           ref="slider"
           v-model="slider"
           :label="sliderLabel"
-          thumb-label
         ></v-slider>
       </v-layout>
 
       <v-layout row>
         <v-flex grow>
           <v-card dark>
-            <v-btn ref="styleButton" color="pink" block @click="styleAction">{{ buttonLabelValue }}</v-btn>
+            <v-btn
+              ref="styleButton"
+              color="pink"
+              block
+              @click="styleAction"
+            >{{ buttonLabelValue }}
+            </v-btn>
           </v-card>
         </v-flex>
         <!-- <v-flex shrink>
           <v-card dark>
-            <v-btn color="pink" block @click="randomize">Randomize</v-btn>
+            <v-btn
+              color="pink"
+              block
+              @click="randomize"
+            >Randomize</v-btn>
           </v-card>
         </v-flex> -->
       </v-layout>
 
       <v-layout row>
         <v-flex>
-          <v-select ref="modelSelectStyle" v-model="style" :items="styleOptions" @change="loadStyle($event)"></v-select>
+          <v-select
+            ref="modelSelectStyle"
+            v-model="style"
+            :items="styleOptions"
+            @change="loadStyle($event)"
+          ></v-select>
         </v-flex>
       </v-layout>
 
       <v-layout row>
         <v-flex>
-          <v-select ref="modelSelectTransformer" v-model="transform" :items="transformOptions" @change="loadTransform($event)"></v-select>
+          <v-select
+            ref="modelSelectTransformer"
+            v-model="transform"
+            :items="transformOptions"
+            @change="loadTransform($event)"
+          ></v-select>
         </v-flex>
       </v-layout>
 
@@ -54,8 +74,14 @@ export default {
       slider: 70,
       style: "[Fast] (9.6MB) Distilled MobileNet style model",
       transform: "[Fast] (2.4MB) Separable_conv2d transformer",
-      styleOptions: ["[Fast] (9.6MB) Distilled MobileNet style model", "[High quality] (36.3MB) Original Inceptionv3 style model"],
-      transformOptions: ["[Fast] (2.4MB) Separable_conv2d transformer", "[High quality] (7.9MB) Original transformer model"],
+      styleOptions: [
+        "[Fast] (9.6MB) Distilled MobileNet style model",
+        "[High quality] (36.3MB) Original Inceptionv3 style model"
+      ],
+      transformOptions: [
+        "[Fast] (2.4MB) Separable_conv2d transformer",
+        "[High quality] (7.9MB) Original transformer model"
+      ],
       styleTransfer: null,
     };
   },
@@ -83,9 +109,9 @@ export default {
       this.$refs['modelSelectTransformer'].disable = false;
     },
     disableStylizeButtons() {
-      this.$refs['styleButton'].disable = true;
-      this.$refs['modelSelectStyle'].disable = true;
-      this.$refs['modelSelectTransformer'].disable = true;
+      this.$refs['styleButton'].disable = false;
+      this.$refs['modelSelectStyle'].disable = false;
+      this.$refs['modelSelectTransformer'].disable = false;
     },
     async initializeModels() {
       let { loadMobileNetStyleModel, loadSeparableTransformerModel } = this.styleTransfer,

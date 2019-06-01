@@ -16,7 +16,7 @@
             >
               <v-layout row wrap>
 
-                <v-flex xs12 class="centered">
+                <v-flex xs12 class="text-xs-center">
                     <video ref="webcam-video" class="flipped" width="500" height="375"></video>
                 </v-flex>
 
@@ -99,10 +99,6 @@ video.flipped {
    * Make sure to flip the captured image as well
    */
   transform: scale(-1, 1);
-}
-
-.centered > * {
-  display: flex;
 }
 
 </style>

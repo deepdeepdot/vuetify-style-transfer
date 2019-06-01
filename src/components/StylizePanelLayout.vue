@@ -86,7 +86,7 @@
           accept="image/*"
           capture="camera"
           class="invisible"
-          ref="shoot-photo"
+          ref="take-picture"
         />
       </v-layout>
     </v-container>
@@ -99,11 +99,16 @@ import CameraModal from './CameraModal';
 import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
 import {
-  loadImageFromFileInput,
   createDownloadLink,
+  loadImageFromFileInput,
 } from '@/lib/ImageUtils';
 import links from '@/data/links';
 
+/*
+ * The download link is a feature more useful for mobile web
+ * On desktops and laptops, a user can right-click on the canvas to save it
+ * In particular, we don't display it for Firefox, since they don't work
+ */
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
 export default {
@@ -145,8 +150,6 @@ export default {
         'statue_of_liberty',
       ],
     };
-  },
-  mounted() {
   },
   methods: {
     getStyleControl() {
@@ -191,8 +194,8 @@ export default {
       switch (selected) {
         case 'Take a picture':
           if (isMobile) {
-            let shootPhoto = this.$refs['shoot-photo'];
-            loadImageFromFileInput(shootPhoto, image, {width:320});
+            let takePicture = this.$refs['take-picture'];
+            loadImageFromFileInput(takePicture, image, {width:320});
           } else {
             this.$refs['modal-camera'].openCameraModal(image);
           }
@@ -230,7 +233,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startStyling(params);
-        this.stylized = true;
+        this.stylized = true; // show download button
         this.enableStylizeButtons();
       }
       else {
@@ -245,7 +248,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startCombining(params);
-        this.stylized = true;
+        this.stylized = true; // show download button
         this.enableStylizeButtons();
       }
     }
