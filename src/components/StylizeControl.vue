@@ -90,6 +90,10 @@ export default {
       return this.stylizeButtonLabel || this.buttonLabel;
     }
   },
+  mounted() {
+    alert('disabled!');
+    this.disableStylizeButtons();
+  },
   methods: {
     reportError(err) {
       alert(err);

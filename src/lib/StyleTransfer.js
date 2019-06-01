@@ -28,14 +28,17 @@ let domain = config['model_domain_url'],
     transformNet = null,
     nets = {};
 
-async function loadModel(type, options, reportStatus, reportError) {
+// eslint-disable-next-line no-console
+let logger = (msg) => console.log(msg);
+
+async function loadModel(type, tfOptions, reportStatus = logger, reportError = logger) {
   const url = domain + '/' + model[type];
 
   if (!nets[type]) { // This is not sufficient to prevent multiple threads loading the same
     let numTrials = 3;
     for (let i = 0; i < numTrials; i++) {
       try {
-        nets[type] = await tf.loadGraphModel(url, options);
+        nets[type] = await tf.loadGraphModel(url, tfOptions);
         reportStatus('Loaded... ' + type);
         break;
       } catch(error) {
@@ -53,47 +56,37 @@ async function loadModel(type, options, reportStatus, reportError) {
 const fetchFunc = window.fetch.bind(window);
 
 export default class StyleTransfer {
-  loadMobileNetStyleModel(reportStatus, reportError, onProgress) {
-    return loadModel('MOBILE_STYLE_NET', {
-      onProgress,
-      fetchFunc,
-    }, reportStatus, reportError).then(function(result) {
-      styleNet = result;
-      return result;
-    });
+  async loadMobileNetStyleModel(reportStatus, reportError, onProgress) {
+    let tfOptions = { onProgress, fetchFunc };
+    styleNet = await loadModel('MOBILE_STYLE_NET', tfOptions, reportStatus, reportError);
+    return styleNet;
   }
 
-  loadInceptionStyleModel(reportStatus, reportError, onProgress) {
-    return loadModel('INCEPTION_STYLE_NET', {
-      onProgress,
-      fetchFunc,
-    }, reportStatus, reportError).then(function(result) {
-      styleNet = result;
-      return result;
-    });
+  async loadInceptionStyleModel(reportStatus, reportError, onProgress) {
+    let tfOptions = { onProgress, fetchFunc };
+    styleNet = await loadModel('INCEPTION_STYLE_NET', tfOptions, reportStatus, reportError);
+    return styleNet;
   }
 
-  loadOriginalTransformerModel(reportStatus, reportError, onProgress) {
-    return loadModel('ORIGINAL_TRANSFORM_NET', {
-      onProgress,
-      fetchFunc,
-    }, reportStatus, reportError).then(function(result) {
-      transformNet = result;
-      return result;
-    });
+  async loadOriginalTransformerModel(reportStatus, reportError, onProgress) {
+    let tfOptions = { onProgress, fetchFunc };
+    transformNet = await loadModel('ORIGINAL_TRANSFORM_NET', tfOptions, reportStatus, reportError);
+    return transformNet;
   }
 
-  loadSeparableTransformerModel(reportStatus, reportError, onProgress) {
-    return loadModel('SEPARABLE_TRANSFORM_NET', {
-      onProgress,
-      fetchFunc,
-    }, reportStatus, reportError).then(function(result) {
-      transformNet = result;
-      return result;
-    });
+  async loadSeparableTransformerModel(reportStatus, reportError, onProgress) {
+    let tfOptions = { onProgress, fetchFunc };
+    transformNet = await loadModel('SEPARABLE_TRANSFORM_NET', tfOptions, reportStatus, reportError);
+    return transformNet;
   }
 
-  async startStyling({contentImg, styleImg, styleRatio, destination, reportStatus}) {
+  async startStyling({
+    contentImg,
+    styleImg,
+    styleRatio,
+    destination,
+    reportStatus})
+  {
     await tf.nextFrame();
     reportStatus('Generating 100D style representation');
 
@@ -126,7 +119,14 @@ export default class StyleTransfer {
     stylized.dispose();
   }
 
-  async startCombining({combContentImg, combStyleImg1, combStyleImg2, combStyleRatio, destination, reportStatus }) {
+  async startCombining({
+    combContentImg,
+    combStyleImg1,
+    combStyleImg2,
+    combStyleRatio,
+    destination,
+    reportStatus }
+  ) {
     await tf.nextFrame();
     reportStatus('Generating 100D style representation of image 1');
     await tf.nextFrame();
