@@ -62,6 +62,7 @@
                   ref="styleControl"
                   sliderLabel="Stylization Ratio"
                   :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
+                  :styleTransfer="styleTransfer"
                   @modelLoaded="enableStylizeButtons"
                   @styleAction="transferStyle"
                 />
@@ -107,9 +108,10 @@ import links from '@/data/links';
 /*
  * The download link is a feature more useful for mobile web
  * On desktops and laptops, a user can right-click on the canvas to save it
- * In particular, we don't display it for Firefox, since they don't work
+ * In particular, we don't display it for Firefox, since downloading is not working (security? bug?)
  */
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+const isFirefox = navigator.userAgent.search('Firefox') > 0; // download links with data-urls don't work
 
 export default {
   name: 'StylizePanelLayout',
@@ -120,10 +122,10 @@ export default {
   },
   props: {
     twoStyles: Boolean,
+    styleTransfer: Object,
   },
   data() {
     return {
-      styleTransfer: null,
       canFitInSingleRow: true,
       stylized: false,
       styleOptions: [
@@ -233,7 +235,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startStyling(params);
-        this.stylized = true; // show download button
+        this.stylized = !isFirefox; // show download button
         this.enableStylizeButtons();
       }
       else {
@@ -248,7 +250,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startCombining(params);
-        this.stylized = true; // show download button
+        this.stylized = !isFirefox; // show download button
         this.enableStylizeButtons();
       }
     }

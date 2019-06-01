@@ -67,6 +67,7 @@ export default {
   props: {
     buttonLabel: String,
     sliderLabel: String,
+    styleTransfer: Object,
   },
   data() {
     return {
@@ -82,7 +83,6 @@ export default {
         "[Fast] (2.4MB) Separable_conv2d transformer",
         "[High quality] (7.9MB) Original transformer model"
       ],
-      styleTransfer: null,
     };
   },
   computed: {
