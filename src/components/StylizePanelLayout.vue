@@ -45,12 +45,21 @@
 
         <v-flex d-flex xs12>
           <v-layout row justify-center>
-            <canvas ref="canvas" id="canvas-single" width="400px" height="200px"></canvas>
+            <canvas
+              ref="canvas"
+              id="canvas-single"
+              width="400px"
+              height="200px"
+            ></canvas>
           </v-layout>
         </v-flex>
         <v-flex v-if="stylized" d-flex xs12>
           <v-layout row justify-center>
-            <v-btn color="pink" dark @click="download">Download</v-btn>
+            <v-btn
+              color="pink"
+              dark
+              @click="download"
+            >Download</v-btn>
           </v-layout>
         </v-flex>
 
