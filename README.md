@@ -41,12 +41,14 @@ App -> Tabs -> StylizePanelLayout -> ImageInput
 
 ### Emitted Events
 
+```
 ImageInput -> imageSizeChanged -> StylizePanelLayout
            -> imageSelected    -> StylizePanelLayout
 
 StylizedControl -> styleAction -> StylizePanelLayout
                 -> modelLoaded -> StylizePanelLayout
 
+```
 
 ### Utilities in /lib
 The lib folder contains three utility classes
