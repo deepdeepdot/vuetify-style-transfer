@@ -109,7 +109,7 @@ import CameraModal from './CameraModal';
 import ImageInput from './ImageInput';
 import StylizeControl from './StylizeControl';
 import {
-  createDownloadLink,
+  downloadImageFromDataUrl,
   loadImageFromFileInput,
 } from '@/lib/ImageUtils';
 import links from '@/data/links';
@@ -120,7 +120,6 @@ import links from '@/data/links';
  * In particular, we don't display it for Firefox, since downloading is not working (security? bug?)
  */
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-const isFirefox = navigator.userAgent.search('Firefox') > 0; // download links with data-urls don't work
 
 export default {
   name: 'StylizePanelLayout',
@@ -171,8 +170,8 @@ export default {
     },
     download() {
       let dataUrl = this.$refs['canvas'].toDataURL('image/png');
-      let link = createDownloadLink(dataUrl, 'sample.png');
-      link.click();
+      downloadImageFromDataUrl(dataUrl, 'sample.png');
+      URL.revokeObjectURL(dataUrl);
     },
     enableStylizeButtons() {
       let readyMsg = this.twoStyles? 'Combine Styles' : 'Stylize';
@@ -244,7 +243,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startStyling(params);
-        this.stylized = !isFirefox; // show download button
+        this.stylized = true; // show download button
         this.enableStylizeButtons();
       }
       else {
@@ -259,7 +258,7 @@ export default {
         };
         this.disableStylizeButtons();
         await this.styleTransfer.startCombining(params);
-        this.stylized = !isFirefox; // show download button
+        this.stylized = true; // show download button
         this.enableStylizeButtons();
       }
     }

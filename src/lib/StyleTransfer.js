@@ -34,7 +34,9 @@ let logger = (msg) => console.log(msg);
 async function loadModel(type, tfOptions, reportStatus = logger, reportError = logger) {
   const url = domain + '/' + model[type];
 
-  if (!nets[type]) { // This is not sufficient to prevent multiple threads loading the same
+  // Note: Checking for `!nets[type]` is not sufficient to prevent multiple threads
+  //       loading the same model since tf.loadGraphModel() can take a long while
+  if (!nets[type]) {
     let numTrials = 3;
     for (let i = 0; i < numTrials; i++) {
       try {

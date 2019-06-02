@@ -14,12 +14,29 @@ I refactored the Javascript and re-implemented the client-side using Vue/Vuetify
 
 A Vue application can be deployed using [Netlify very quickly](https://medium.com/vuejoy/how-to-deploy-your-vue-app-with-netlify-in-less-than-2-min-d6ab26c6557d)
 
-[Vuetify](https://vuetifyjs.com) is a [material design](https://material.io/design/) implementation for [Vue](https://vuejs.org)
+[Vuetify](https://vuetifyjs.com) is one of the [material design](https://material.io/design/) implementations for [Vue](https://vuejs.org)
+
+
+## Motivation
+
+Finally I decided to explore machine learning starting with the famous Andrew Ng's coursera class.
+Then I proceeced to deep learning (neural networks) and computer vision.
+* [MIT's Intro to Deep Learning](http://introtodeeplearning.com/)
+* [Kadenze's Creative apps with Tensorflow](https://www.kadenze.com/courses/)
+* [CS231, Stanford's cs231, CNN for visual recognition](http://cs231n.stanford.edu/)
+creative-applications-of-deep-learning-with-tensorflow/info)
+* [Udemy's PyTorch and Computer Vision](https://www.udemy.com/pytorch-for-deep-learning-and-computer-vision/)
+
+
+I found out about Style Transfer through [Tensorflow examples](https://www.tensorflow.org/alpha/tutorials/generative/style_transfer). But training a model with a specific style would take about 4 hours on an nvidia GTX 1080.
+
+Later, I found out about a much faster way to do Style Transfer without the GPU intensive training per single style through Reiiniko's work. Given my expertise on Javascript, I decided to refactor it to understand how Tensorflow.js worked. In the process I learned some limitations with Tensorflow.js with mobile web.
 
 
 ## Architecture
 
 ### Components
+
 The App contains a Tabs component with two StylizePanelLayouts.
 Each StylizePanelLayout contains a CameraModal, a StylizeControl and three instances of ImageInputs (two for the styles and one for the image content).
 The StylizeControl contains the Stylize button and the Tensorflow model selectors.
@@ -78,3 +95,6 @@ npm run build
 npm run lint
 ```
 
+## Issues
+
+* Safari browser on laptops will reload the web page due to high memory consumption (these models are several MBs)

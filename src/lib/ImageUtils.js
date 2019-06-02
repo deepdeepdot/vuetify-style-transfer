@@ -1,8 +1,11 @@
-function createDownloadLink(dataUrl, filename) {
-  let a = document.createElement('a');
-  a.href = dataUrl;
-  a.download = filename;
-  return a;
+function downloadImageFromDataUrl(dataUrl, filename) {
+  let link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = filename;
+
+  document.body.appendChild(link); // For FF
+  link.click();
+  document.body.removeChild(link);
 }
 
 function loadImageFromFileInput(fileInput, image, resize) {
@@ -26,6 +29,7 @@ function loadImageFromFile(file, image, resize, srcOrientation) {
         { ...resize, destination: image },
         srcOrientation
       );
+      URL.revokeObjectURL(e.target.result); // this might be happening automatically
     };
   };
   fileReader.readAsDataURL(file);
@@ -39,16 +43,21 @@ function resizeImageToDestination(source, { width, height, destination }, srcOri
   height = height || (width && width / ratio) || source.height;
 
   let resizedCanvas = document.createElement("canvas");
-  resizeCanvas(resizedCanvas, width, height, srcOrientation);
+  setCanvasSize(resizedCanvas, width, height, srcOrientation);
 
   let ctx = resizedCanvas.getContext("2d");
   transformContext(ctx, width, height, srcOrientation);
 
   ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, width, height);
-  destination.src = resizedCanvas.toDataURL('image/png');
+
+  let dataUrl = resizedCanvas.toDataURL('image/png');
+  destination.src = dataUrl;
+  destination.onload = function() {
+    URL.revokeObjectURL(dataUrl);
+  }
 }
 
-function resizeCanvas(resizedCanvas, width, height, srcOrientation) {
+function setCanvasSize(resizedCanvas, width, height, srcOrientation) {
   // See: https://stackoverflow.com/questions/20600800/js-client-side-exif-orientation-rotate-and-mirror-jpeg-images
   let flip = srcOrientation && 4 < srcOrientation && srcOrientation < 9;
   if (flip) {
@@ -118,6 +127,6 @@ function getOrientation(file, callback) {
 }
 
 export {
-  createDownloadLink,
+  downloadImageFromDataUrl,
   loadImageFromFileInput,
 };

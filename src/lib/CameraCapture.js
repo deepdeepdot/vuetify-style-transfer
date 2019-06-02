@@ -55,4 +55,7 @@ function capture(video, image, flip=true) {
   let imageDataURL = canvas.toDataURL("image/png");
   image.crossOrigin = "anonymous";
   image.src = imageDataURL;
+  image.onload = function() {
+    URL.revokeObjectURL(imageDataURL); // save resources sooner
+  }
 }
