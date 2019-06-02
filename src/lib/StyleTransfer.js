@@ -1,10 +1,10 @@
 /*
  * StyleTransfer
  */
-
-// const env = process.NODE_ENV == 'production' ? 'prod' : 'dev';
 import * as tf from '@tensorflow/tfjs';
-import config from '@/config';
+const config = {
+  model_domain_url: "" // URL domain for models, "" is for relative to the web app
+}
 
 // Need to double-check if this still holds, not much difference at first
 tf.ENV.set('WEBGL_PACK', false);  // This needs to be done otherwise things run very slow v1.0.4
