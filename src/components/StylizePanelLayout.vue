@@ -72,7 +72,6 @@
                   sliderLabel="Stylization Ratio"
                   :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
                   :styleTransfer="styleTransfer"
-                  @modelLoaded="enableStylizeButtons"
                   @styleAction="transferStyle"
                 />
               </v-card>
@@ -114,11 +113,6 @@ import {
 } from '@/lib/ImageUtils';
 import links from '@/data/links';
 
-/*
- * The download link is a feature more useful for mobile web
- * On desktops and laptops, a user can right-click on the canvas to save it
- * In particular, we don't display it for Firefox, since downloading is not working (security? bug?)
- */
 const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
 export default {
@@ -160,6 +154,11 @@ export default {
         'statue_of_liberty',
       ],
     };
+  },
+  mounted() {
+    this.styleTransfer.on('modelLoaded', () => {
+      this.enableStylizeButtons();
+    })
   },
   methods: {
     getStyleControl() {

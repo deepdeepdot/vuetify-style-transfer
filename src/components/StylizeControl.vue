@@ -62,6 +62,15 @@
 
 <script>
 
+const styleOptions = [
+    "[Fast] (9.6MB) Distilled MobileNet style model",
+    "[High quality] (36.3MB) Original Inceptionv3 style model"
+  ],
+  transformOptions = [
+    "[Fast] (2.4MB) Separable_conv2d transformer",
+    "[High quality] (7.9MB) Original transformer model"
+  ];
+
 export default {
   name: "StylizeControl",
   props: {
@@ -73,16 +82,10 @@ export default {
     return {
       stylizeButtonLabel: null,
       slider: 70,
-      style: "[Fast] (9.6MB) Distilled MobileNet style model",
-      transform: "[Fast] (2.4MB) Separable_conv2d transformer",
-      styleOptions: [
-        "[Fast] (9.6MB) Distilled MobileNet style model",
-        "[High quality] (36.3MB) Original Inceptionv3 style model"
-      ],
-      transformOptions: [
-        "[Fast] (2.4MB) Separable_conv2d transformer",
-        "[High quality] (7.9MB) Original transformer model"
-      ],
+      style: styleOptions[0],
+      transform: transformOptions[0],
+      styleOptions,
+      transformOptions,
     };
   },
   computed: {
@@ -92,6 +95,13 @@ export default {
   },
   mounted() {
     this.disableStylizeButtons();
+    this.styleTransfer.on('modelLoaded', ({type, choice}) => {
+      if (type === 'style') {
+        this.style = styleOptions[choice === 'MOBILE_STYLE_NET' ? 0:1];
+      } else if (type === 'transform') {
+        this.transform = transformOptions[choice === 'SEPARABLE_TRANSFORM_NET' ? 0:1 ];
+      }
+    })
   },
   methods: {
     reportError(err) {
@@ -152,7 +162,7 @@ export default {
     },
     async loadTransform(event) {
       let type = event.startsWith('[Fast]') ? 'SEPARABLE_TRANSFORM_NET' : 'ORIGINAL_TRANSFORM_NET',
-          { loadOriginalTransformerModel, loadSeparableTransformerModel } = this.styleTransfer,
+          { loadSeparableTransformerModel, loadOriginalTransformerModel } = this.styleTransfer,
           { reportStatus, reportError } = this;
 
       try {
