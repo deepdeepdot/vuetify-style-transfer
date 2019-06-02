@@ -61,10 +61,9 @@ class Observer {
 
   on(type, listener) {
     if (type in this.listeners) {
-      this.listeners[type].push(listener);
-    } else {
-      alert('unrecognized event type: ' + type);
+      return this.listeners[type].push(listener);
     }
+    throw new Error(`Unrecognized event type: ${type}`);
   }
 
   publish(event, data) {
