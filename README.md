@@ -10,7 +10,7 @@ Live URL: https://style-transfer.netlify.com (if the Netlify build is successful
 This project is based on:
 https://github.com/reiinakano/arbitrary-image-stylization-tfjs
 
-I refactored the Javascript and re-implemented the client-side using Vue/Vuetify. There are some upgrades to the latest Tensorflow.js and number of fixes and improvements for mobile web.
+I refactored the Javascript and re-implemented the client-side using Vue/Vuetify. There are some upgrades to the latest Tensorflow.js and a number of fixes and improvements for mobile web.
 
 A Vue application can be deployed using [Netlify very quickly](https://medium.com/vuejoy/how-to-deploy-your-vue-app-with-netlify-in-less-than-2-min-d6ab26c6557d)
 
