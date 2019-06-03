@@ -54,58 +54,32 @@ async function loadModel(type, tfOptions, reportStatus = logger, reportError = l
   return nets[type];
 }
 
-class Observer {
-  listeners = {
-    modelLoaded: []
-  };
-
-  on(type, listener) {
-    if (type in this.listeners) {
-      return this.listeners[type].push(listener);
-    }
-    throw new Error(`Unrecognized event type: ${type}`);
-  }
-
-  publish(event, data) {
-    this.listeners[event].forEach(listener => listener(data));
-  }
-}
-
 // To make it work with the upgrade to Tensorflow.js 1.1.2 (otherwise, stuck with TF 1.0)
 const fetchFunc = window.fetch.bind(window);
 
-let observer = new Observer();
-
-class StyleTransfer extends Observer{
-  on(event, listener) {
-    observer.on(event, listener);
-  }
+class StyleTransfer {
 
   async loadMobileNetStyleModel(reportStatus, reportError, onProgress) {
     let tfOptions = { onProgress, fetchFunc };
     styleNet = await loadModel('MOBILE_STYLE_NET', tfOptions, reportStatus, reportError);
-    observer.publish('modelLoaded', { type: 'style', choice: 'MOBILE_STYLE_NET' });
     return styleNet;
   }
 
   async loadInceptionStyleModel(reportStatus, reportError, onProgress) {
     let tfOptions = { onProgress, fetchFunc };
     styleNet = await loadModel('INCEPTION_STYLE_NET', tfOptions, reportStatus, reportError);
-    observer.publish('modelLoaded', { type: 'style', choice: 'INCEPTION_STYLE_NET' });
     return styleNet;
   }
 
   async loadOriginalTransformerModel(reportStatus, reportError, onProgress) {
     let tfOptions = { onProgress, fetchFunc };
     transformNet = await loadModel('ORIGINAL_TRANSFORM_NET', tfOptions, reportStatus, reportError);
-    observer.publish('modelLoaded', { type: 'transform', choice: 'ORIGINAL_TRANSFORM_NET' });
     return transformNet;
   }
 
   async loadSeparableTransformerModel(reportStatus, reportError, onProgress) {
     let tfOptions = { onProgress, fetchFunc };
     transformNet = await loadModel('SEPARABLE_TRANSFORM_NET', tfOptions, reportStatus, reportError);
-    observer.publish('modelLoaded', { type: 'transform', choice: 'SEPARABLE_TRANSFORM_NET' });
     return transformNet;
   }
 

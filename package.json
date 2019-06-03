@@ -10,10 +10,11 @@
     "surge-deploy": "npm run build && npm run cp-surge-files && cd dist && surge"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "~1.1.2",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "vuetify": "^1.5.5",
-    "@tensorflow/tfjs": "~1.1.2"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",

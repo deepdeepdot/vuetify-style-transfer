@@ -73,6 +73,7 @@
                   :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
                   :styleTransfer="styleTransfer"
                   @styleAction="transferStyle"
+                  @modelLoaded="enableStylizeButtons"
                 />
               </v-card>
             </v-flex>
@@ -156,9 +157,7 @@ export default {
     };
   },
   mounted() {
-    this.styleTransfer.on('modelLoaded', () => {
-      this.enableStylizeButtons();
-    })
+    this.enableStylizeButtons();
   },
   methods: {
     getStyleControl() {

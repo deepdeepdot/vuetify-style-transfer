@@ -38,7 +38,7 @@
         <v-flex>
           <v-select
             ref="modelSelectStyle"
-            v-model="style"
+            :value="style"
             :items="styleOptions"
             @change="loadStyle($event)"
           ></v-select>
@@ -49,7 +49,7 @@
         <v-flex>
           <v-select
             ref="modelSelectTransformer"
-            v-model="transform"
+            :value="transform"
             :items="transformOptions"
             @change="loadTransform($event)"
           ></v-select>
@@ -82,8 +82,6 @@ export default {
     return {
       stylizeButtonLabel: null,
       slider: 70,
-      style: styleOptions[0],
-      transform: transformOptions[0],
       styleOptions,
       transformOptions,
     };
@@ -91,17 +89,18 @@ export default {
   computed: {
     buttonLabelValue() {
       return this.stylizeButtonLabel || this.buttonLabel;
+    },
+    style() {
+      return this.$store.state.style;
+    },
+    transform() {
+      return this.$store.state.transform;
     }
   },
   mounted() {
     this.disableStylizeButtons();
-    this.styleTransfer.on('modelLoaded', ({type, choice}) => {
-      if (type === 'style') {
-        this.style = styleOptions[choice === 'MOBILE_STYLE_NET' ? 0:1];
-      } else if (type === 'transform') {
-        this.transform = transformOptions[choice === 'SEPARABLE_TRANSFORM_NET' ? 0:1 ];
-      }
-    })
+    this.$store.commit('styleUpdate', styleOptions[0]);
+    this.$store.commit('transformUpdate', transformOptions[0]);
   },
   methods: {
     reportError(err) {
@@ -136,7 +135,6 @@ export default {
           loadMobileNetStyleModel(reportStatus, reportError),
           loadSeparableTransformerModel(reportStatus, reportError),
         ]);
-        this.enableStylizeButtons();
         this.$emit('modelLoaded');
       } catch(error) {
         reportError(error);
@@ -154,8 +152,8 @@ export default {
         } else if (type === 'INCEPTION_STYLE_NET') {
           await loadInceptionStyleModel(reportStatus, reportError);
         }
-        this.enableStylizeButtons();
         this.$emit('modelLoaded');
+        this.$store.commit('styleUpdate', event);
       } catch(error) {
         reportError(error);
       }
@@ -172,8 +170,8 @@ export default {
         } else if (type === 'ORIGINAL_TRANSFORM_NET') {
           await loadOriginalTransformerModel(reportStatus, reportError);
         }
-        this.enableStylizeButtons();
         this.$emit('modelLoaded');
+        this.$store.commit('transformUpdate', event);
       } catch(error) {
         reportError(error);
       }
