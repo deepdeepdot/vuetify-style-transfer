@@ -71,7 +71,6 @@
                   ref="styleControl"
                   sliderLabel="Stylization Ratio"
                   :buttonLabel="twoStyles? 'Combine Styles' : 'Stylize'"
-                  :styleTransfer="styleTransfer"
                   @styleAction="transferStyle"
                   @modelLoaded="enableStylizeButtons"
                 />
@@ -125,7 +124,6 @@ export default {
   },
   props: {
     twoStyles: Boolean,
-    styleTransfer: Object,
   },
   data() {
     return {
@@ -158,6 +156,11 @@ export default {
   },
   mounted() {
     this.enableStylizeButtons();
+  },
+  computed: {
+    styleTransfer() {
+      return this.$store.state.styleTransfer;
+    }
   },
   methods: {
     getStyleControl() {

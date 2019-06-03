@@ -6,7 +6,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         style: '',
-        transform: ''
+        transform: '',
+        styleTransfer: null,
     },
     mutations: {
         styleUpdate(state, style) {
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
         },
         transformUpdate(state, transform) {
             state.transform = transform;
+        },
+        styleTransferUpdate(state, styleTransfer) {
+            state.styleTransfer = styleTransfer;
         }
     }
 })

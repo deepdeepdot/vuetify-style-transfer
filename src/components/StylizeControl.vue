@@ -76,7 +76,6 @@ export default {
   props: {
     buttonLabel: String,
     sliderLabel: String,
-    styleTransfer: Object,
   },
   data() {
     return {
@@ -95,6 +94,9 @@ export default {
     },
     transform() {
       return this.$store.state.transform;
+    },
+    styleTransfer() {
+      return this.$store.state.styleTransfer;
     }
   },
   mounted() {

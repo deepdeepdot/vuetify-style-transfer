@@ -22,7 +22,6 @@
             <v-card flat>
               <StylizePanelLayout
                 ref="stylePanel1"
-                :styleTransfer="styleTransfer"
               />
             </v-card>
           </v-tab-item>
@@ -37,7 +36,6 @@
               <StylizePanelLayout
                 ref="stylePanel2"
                 twoStyles
-                :styleTransfer="styleTransfer"
               />
             </v-card>
           </v-tab-item>
@@ -56,9 +54,6 @@
       return {
         active: null
       }
-    },
-    props: {
-      styleTransfer: Object
     },
     components: {
       StylizePanelLayout
